@@ -28,8 +28,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "phonenumber_field",
+    "location_field.apps.DefaultConfig",
+    "django_extensions",
+    "djmoney",
     "accounts",
     "core",
+    "shops",
+    "tenders",
 ]
 
 MIDDLEWARE = [
@@ -65,6 +71,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+AUTH_USER_MODEL = "accounts.Customer"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
