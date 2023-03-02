@@ -8,6 +8,7 @@ from location_field.models.plain import PlainLocationField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from accounts.managers import CustomerManager
+from accounts.utils.validators import brand_name_unique_validator
 
 
 class Customer(AbstractBaseUser, PermissionsMixin):
@@ -64,21 +65,30 @@ class Customer(AbstractBaseUser, PermissionsMixin):
     def get_all_seller():
         return Customer.objects.filter(user_type=1)
 
+    def __str__(self):
+        return f"{self.email} - {self.user_type}"
+
 
 class BuyerProfile(models.Model):
     customer = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    first_name = models.CharField(_("first name"), max_length=150, blank=True)
-    last_name = models.CharField(_("last name"), max_length=150, blank=True)
+    first_name = models.CharField(_("first name"), max_length=150)
+    last_name = models.CharField(_("last name"), max_length=150)
     birthdate = models.DateField(_("day of birth"), blank=True, null=True)
     avatar = models.ImageField(upload_to='accounts/uploads/', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.pk} {self.first_name} {self.last_name}"
 
 
 class SellerProfile(models.Model):
     customer = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    brand_name = models.CharField(_("brand name"), max_length=150, unique=True)
+    brand_name = models.CharField(_("brand name"), max_length=150, validators=[brand_name_unique_validator])
     description = models.CharField(_("sort description"), max_length=300, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     location = PlainLocationField(based_fields=['city'], zoom=7, blank=True, null=True)
     url = models.URLField(unique=True, blank=True, null=True, max_length=250)
     rang = models.PositiveIntegerField(blank=True, null=True)
     logo = models.ImageField(upload_to='accounts/uploads/', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.pk} - {self.brand_name}"
