@@ -11,6 +11,7 @@ from api.serializers import (BrandSerializer, BuyerProfileSerializer,
                              ProductParameterSerializer, ProductSerializer,
                              RequestSerializer, SellerProfileSerializer,
                              TenderSerializer)
+from core.permissions import IsBuyer, IsSeller
 from shops.models import Brand, Category, Order, Product
 from tenders.models import ProductParameter, Request, Tender
 
@@ -26,6 +27,7 @@ class CustomerRetrieveView(RetrieveAPIView):
 
 
 class CustomerCreateView(CreateAPIView):
+    queryset = get_user_model().objects.all()
     serializer_class = CustomerCreateSerializer
 
 
@@ -36,6 +38,7 @@ class CustomerUpdateView(UpdateAPIView):
 
 class CustomerDeleteView(DestroyAPIView):
     queryset = get_user_model().objects.all()
+    serializer_class = CustomerCreateSerializer
 
 
 class CustomerProfile(RetrieveAPIView):
@@ -89,49 +92,59 @@ class CustomerProfileUpdate(UpdateAPIView):
 
 
 class ProductListView(ListAPIView):
+    permission_classes = [IsSeller]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
 class ProductRetrieveView(RetrieveAPIView):
+    permission_classes = [IsSeller]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
 class ProductCreateView(CreateAPIView):
+    permission_classes = [IsSeller]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
 class ProductUpdateView(UpdateAPIView):
+    permission_classes = [IsSeller]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
 class ProductDeleteView(DestroyAPIView):
+    permission_classes = [IsSeller]
     queryset = Product.objects.all()
 
 
 class OrderListView(ListAPIView):
+    permission_classes = [IsBuyer]
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
 class OrderRetrieveView(RetrieveAPIView):
+    permission_classes = [IsBuyer]
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
 class OrderCreateView(CreateAPIView):
+    permission_classes = [IsBuyer]
     serializer_class = OrderSerializer
 
 
 class OrderUpdateView(UpdateAPIView):
+    permission_classes = [IsBuyer]
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
 class OrderDeleteView(DestroyAPIView):
+    permission_classes = [IsBuyer]
     queryset = Order.objects.all()
 
 
