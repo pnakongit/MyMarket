@@ -31,11 +31,13 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "location_field.apps.DefaultConfig",
     "django_extensions",
+    "rest_framework",
     "djmoney",
     "accounts",
     "core",
     "shops",
     "tenders",
+    "api",
 ]
 
 MIDDLEWARE = [
