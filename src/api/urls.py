@@ -1,4 +1,7 @@
-from django.urls import path
+from django.urls import include, path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
 from api.views import (BrandCreateView, BrandDeleteView, BrandRetrieveView,
                        BrandUpdateView, CategoryCreateView, CategoryDeleteView,
@@ -19,7 +22,22 @@ from api.views import (BrandCreateView, BrandDeleteView, BrandRetrieveView,
 
 app_name = "api"
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title="MyMarker API",
+        default_version="v1",
+        description="API for my magazine",
+        term_of_service="https://www.myterms.com/policies/terms/",
+        contact=openapi.Contact(email="admin@admin.com"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
+
 urlpatterns = [
+    path("auth/", include("djoser.urls.jwt")),
+    path("docs/", schema_view.with_ui("redoc", cache_timeout=0), name="swagger_docs"),
     path("customers/", CustomersListView.as_view(), name="all_customers"),
     path("customers/<int:pk>/", CustomerRetrieveView.as_view(), name="customer_detail"),
     path("customers/create/", CustomerCreateView.as_view(), name='customer_create'),

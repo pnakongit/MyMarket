@@ -55,6 +55,7 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 
     def save(self, *args, **kwargs):
         self.full_clean()
+        self.set_password(self.password)
         return super().save(*args, **kwargs)
 
     @staticmethod
@@ -70,7 +71,7 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 
 
 class BuyerProfile(models.Model):
-    customer = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    customer = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name="buyer_profile")
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
     birthdate = models.DateField(_("day of birth"), blank=True, null=True)
@@ -81,7 +82,7 @@ class BuyerProfile(models.Model):
 
 
 class SellerProfile(models.Model):
-    customer = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    customer = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name="seller_profile")
     brand_name = models.CharField(_("brand name"), max_length=150, validators=[brand_name_unique_validator])
     description = models.CharField(_("sort description"), max_length=300, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
