@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  backend:
+    build: ./
+    container_name: mymarket_container
+    working_dir: /my_market
+    command:
+      - ./commands/start_server.sh
+    ports:
+      - 8008:8008
+    volumes:
+      - ./src:/my_market/src
+      - ./commands:/my_market/commands
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:12.12
+    ports:
+      - 5432:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+volumes:
+  pg_data: { }
