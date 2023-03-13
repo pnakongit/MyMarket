@@ -17,4 +17,4 @@ RUN python -m pip install --upgrade pip && pip install -r ./requirements.txt
 
 USER app
 EXPOSE 8008
-CMD ["python", "src/manage.py", "runserver", "0:8008"]
+CMD ["bash"]
