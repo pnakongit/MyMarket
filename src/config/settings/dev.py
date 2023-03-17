@@ -8,11 +8,13 @@ SECRET_KEY = "django-insecure-s4hy4e0bscfl)objduu9@*!889_7ewf$e!)ganyn!r(zx(me$*
 
 ALLOWED_HOSTS = []
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
 
 if os.environ.get("GITHUB_WORKFLOW"):
     DATABASES = {
