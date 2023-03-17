@@ -43,7 +43,7 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ["phone_number"]
 
     class Meta:
         verbose_name = _("Customer")
@@ -55,7 +55,6 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        self.set_password(self.password)
         return super().save(*args, **kwargs)
 
     @staticmethod

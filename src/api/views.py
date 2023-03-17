@@ -30,6 +30,11 @@ class CustomerCreateView(CreateAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = CustomerCreateSerializer
 
+    def perform_create(self, serializer):
+        user = serializer.save()
+        user.set_password(user.password)
+        user.save()
+
 
 class CustomerUpdateView(UpdateAPIView):
     queryset = get_user_model().objects.all()
