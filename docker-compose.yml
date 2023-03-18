@@ -26,5 +26,45 @@ services:
     env_file:
       - .env
 
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 5000:80
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+  mongodb:
+    image: mongo:3
+    container_name: mongo_db_container
+    restart: always
+    hostname: mongodb
+    ports:
+      - 27017:27017
+    env_file:
+      - .env
+    volumes:
+      - mg_data:/data/db
+
+
+  mongoadmin:
+    image: mongo-express
+    restart: always
+    container_name: mongo_admin_container
+    ports:
+      - 8081:8081
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+
+
 volumes:
   pg_data: { }
+  pgadmin_data: { }
+  mg_data: { }

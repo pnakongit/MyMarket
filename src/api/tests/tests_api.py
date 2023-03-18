@@ -37,7 +37,7 @@ class TestAPI(TestCase):
 
     def test_product_create_seller(self):
         self.client.force_authenticate(self.seller)
-        data = {"product_name": "test1", "description": "test2", "price": 1500, "seller": 1}
+        data = {"product_name": "test1", "description": "test2", "price": 1500, "seller": self.seller.seller_profile.pk}
         result = self.client.post(reverse("api:product_create"), data=data)
         self.assertEqual(result.status_code, HTTP_201_CREATED)
 
@@ -47,10 +47,11 @@ class TestAPI(TestCase):
         Product.objects.create(product_name="test1", description="test2", price=1500, seller=self.seller.seller_profile)
 
         data = {
-            "buyer": 1,
-            "product": 1,
+            "buyer": self.buyer.buyer_profile.pk,
+            "product": Product.objects.get(pk=1).pk,
             "amount": 2,
         }
+
         result = self.client.post(reverse("api:order_create"), data=data)
         self.assertEqual(result.status_code, HTTP_201_CREATED)
 

@@ -11,6 +11,7 @@ def main():
     if sys.argv[1] == 'test':
         print("NOTE: Running black formation:")
         print(os.popen(f"black --config {Path(__file__).resolve().parent.parent}\\.black.toml . -S").read())
+        # print(os.popen(f"black --config {Path(__file__).resolve().parent.parent}\\.black.toml . -S").read())
         print(os.popen("isort .").read())
     try:
         from django.core.management import execute_from_command_line

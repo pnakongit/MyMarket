@@ -7,6 +7,9 @@ WORKDIR /my_market
 
 COPY ./src ./src
 COPY ./requirements.txt ./requirements.txt
+COPY ./commands ./commands
+COPY ./.black.toml ./.black.toml
+COPY ./.flake8 ./.flake8
 
 RUN groupadd -r user && useradd -r -g user app
 
