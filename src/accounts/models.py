@@ -83,7 +83,7 @@ class BuyerProfile(models.Model):
 class SellerProfile(models.Model):
     customer = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name="seller_profile")
     brand_name = models.CharField(_("brand name"), max_length=150, validators=[brand_name_unique_validator])
-    description = models.CharField(_("sort description"), max_length=300, blank=True, null=True)
+    description = models.CharField(_("short description"), max_length=300, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     location = PlainLocationField(based_fields=['city'], zoom=7, blank=True, null=True)
     url = models.URLField(unique=True, blank=True, null=True, max_length=250)

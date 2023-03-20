@@ -1,0 +1,71 @@
+{% extends "core/index.html" %}
+
+{% block hero_item %}
+{% endblock %}
+
+{% block content %}
+    <!-- Product Details Section Begin -->
+    <section class="product-details spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="product__details__pic">
+                        <div class="product__details__pic__item">
+                            <img class="product__details__pic__item--large"
+                                    {% if product.image %}
+                                 src={{ product.image.url }}>
+                                    {% else %}
+                                        alt="image not available ">
+                                    {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="product__details__text">
+                        <h3>{{ product.product_name }}</h3>
+                        <div class="product__details__price">{{ product.price }}</div>
+                        <p>{{ product.description }} </p>
+                        <div class="product__details__quantity">
+                            <div class="quantity">
+                                <div class="pro-qty">
+                                    <input type="text" value="1">
+                                </div>
+                            </div>
+                        </div>
+                        {% if product.available %}
+                            <a href="#" class="primary-btn">ADD TO CARD</a>
+                        {% else %}
+                            <a class="primary-btn">Now not available</a>
+                        {% endif %}
+                        <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                        <ul>
+                            <li><b>Availability</b>
+                                <span>
+                                    {% if product.available %}
+                                        available
+                                    {% else %}
+                                        not available
+                                    {% endif %}
+                                </span>
+                            </li>
+                            <li><b>Seller</b> <span> {{ product.seller.brand_name }} </span></li>
+                            <li><b>Category</b> <span>{{ product.category.name }}</span></li>
+                            <li><b>Brand</b> <span>{{ product.brand.name }}</span></li>
+                            <li><b>Share on</b>
+                                <div class="share">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-instagram"></i></a>
+                                    <a href="#"><i class="fa fa-pinterest"></i></a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+{% endblock %}

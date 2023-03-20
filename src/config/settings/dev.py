@@ -46,6 +46,6 @@ else:
                 'password': os.environ.get('MONGO_INITDB_ROOT_PASSWORD'),
                 'authSource': 'admin',
                 'authMechanism': 'SCRAM-SHA-1',
-            }
-        }
+            },
+        },
     }
