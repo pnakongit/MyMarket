@@ -11,13 +11,11 @@ COPY ./commands ./commands
 COPY ./.black.toml ./.black.toml
 COPY ./.flake8 ./.flake8
 
-RUN groupadd -r user && useradd -r -g user app
 
 
 RUN python -m pip install --upgrade pip && pip install -r ./requirements.txt
 
 
 
-USER app
 EXPOSE 8008
 CMD ["bash"]
