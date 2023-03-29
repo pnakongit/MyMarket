@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -33,6 +35,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "rest_framework",
     "rest_framework_simplejwt",
+    "django_celery_beat",
     "drf_yasg",
     "djoser",
     "djmoney",
@@ -133,4 +136,26 @@ DJOSER = {
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
     "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND": True,
     "PASSWORD_RESET_CONFIRM_URL": "auth/password-reset/{uid}/{token}",
+}
+
+CELERY_BROKER_URL = "redis://redis"
+CELERY_BROKER_BACKEND = "redis://redis"
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"
+
+CELERY_BEAT_SCHEDULE = {
+    "some_periodic_task": {
+        "task": "accounts.tasks.test_task",
+        "schedule": crontab(minute="*/15")
+    },
+    "at_12_00_on_friday": {
+        "task": "accounts.tasks.test_task",
+        "schedule": crontab(minute="0", hour="12", day_of_month="*", month_of_year="*", day_of_week="5")
+    },
+    "my_birth_day": {
+        "task": "accounts.tasks.test_task",
+        "schedule": crontab(minute="4", hour="5", day_of_month="3", month_of_year="9")
+    }
 }
