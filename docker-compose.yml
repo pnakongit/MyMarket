@@ -8,7 +8,7 @@ services:
     command:
       - ./commands/start_server_${MODE}.sh
     ports:
-      - 8008:8008
+      - ${LOCAL_PORT}:${WSGI_PORT}
     volumes:
       - ./src:/my_market/src
       - ./commands:/my_market/commands
@@ -77,6 +77,58 @@ services:
     env_file:
       - .env
     depends_on:
+      - backend
+
+  redis:
+    image: redis
+    container_name: redis
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - backend
+
+  celerybeat:
+    build: ./
+    command:
+      - ./commands/start_celery_beat.sh
+    restart: always
+    volumes:
+      - ./src:/my_market
+      - ./commands:/my_market/commands
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - backend
+
+
+  redisadmin:
+    image: rediscommander/redis-commander:latest
+    container_name: redisadmin
+    hostname: redisadmin
+    restart: always
+    ports:
+      - 8092:8081
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+  celery-flower:
+    build: ./
+    command:
+      - ./commands/start_celery_flower.sh
+    restart: always
+    volumes:
+      - ./src:/my_market
+      - ./commands:/my_market/commands
+    ports:
+      - 5556:5555
+    env_file:
+      - .env
+    depends_on:
+      - redis
       - backend
 
 volumes:

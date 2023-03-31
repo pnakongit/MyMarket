@@ -23,6 +23,7 @@ from core.views import IndexView
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
+    path("accounts/", include("accounts.urls")),
     path("", IndexView.as_view(), name='index'),
     path("shops/", include("shops.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -36,14 +36,14 @@ class Customer(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-    phone_number = PhoneNumberField(blank=True, unique=True)
+    phone_number = PhoneNumberField(blank=True, null=True, unique=True)
     user_type = models.PositiveIntegerField(choices=TypeChoices.choices, default=TypeChoices.BUYER)
 
     objects = CustomerManager()
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["phone_number"]
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = _("Customer")
