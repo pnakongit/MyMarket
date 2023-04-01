@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "drf_yasg",
     "djoser",
     "djmoney",
+    "crispy_forms",
+    "crispy_bootstrap5",
     "accounts",
     "core",
     "shops",
@@ -146,16 +148,18 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 
 CELERY_BEAT_SCHEDULE = {
-    "some_periodic_task": {
-        "task": "accounts.tasks.test_task",
-        "schedule": crontab(minute="*/15")
-    },
+    "some_periodic_task": {"task": "accounts.tasks.test_task", "schedule": crontab(minute="*/15")},
     "at_12_00_on_friday": {
         "task": "accounts.tasks.test_task",
-        "schedule": crontab(minute="0", hour="12", day_of_month="*", month_of_year="*", day_of_week="5")
+        "schedule": crontab(minute="0", hour="12", day_of_month="*", month_of_year="*", day_of_week="5"),
     },
     "my_birth_day": {
         "task": "accounts.tasks.test_task",
-        "schedule": crontab(minute="4", hour="5", day_of_month="3", month_of_year="9")
-    }
+        "schedule": crontab(minute="4", hour="5", day_of_month="3", month_of_year="9"),
+    },
 }
+
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"

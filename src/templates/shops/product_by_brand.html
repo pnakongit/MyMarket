@@ -1,0 +1,41 @@
+{% extends "core/index.html" %}
+
+{% block hero_item %}
+{% endblock %}
+
+{% block content %}
+    <div class="section-title">
+        {% if products %}
+            <h2> The product page of the brand {{ products.first.brand.name | title }} </h2>
+        {% else%}
+            <h2> We do not have products of this brand ( </h2>
+        {% endif %}
+    </div>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg" data-setbg=
+                            {% if product.image %}
+                                {{ product.image.url }}>
+                            {% else %}
+                                "...">
+                            {% endif %}
+                    <ul class="product__item__pic__hover">
+                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                    </ul>
+                    </div>
+                    <div class="product__item__text">
+                        <h6><a href="#">product.product_name</a></h6>
+                        <h5>product.price</h5>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <h6><span> Product not fount :((</span></h6>
+        {% endfor %}
+    </div>
+
+{% endblock %}
