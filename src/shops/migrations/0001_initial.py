@@ -31,9 +31,7 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=150)),
                 (
                     "image",
-                    models.ImageField(
-                        blank=True, null=True, upload_to="accounts/uploads/"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="accounts/uploads/"),
                 ),
             ],
         ),
@@ -52,9 +50,7 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=150)),
                 (
                     "image",
-                    models.ImageField(
-                        blank=True, null=True, upload_to="accounts/uploads/"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="accounts/uploads/"),
                 ),
             ],
         ),
@@ -73,9 +69,7 @@ class Migration(migrations.Migration):
                 ("product_name", models.CharField(max_length=150)),
                 (
                     "image",
-                    models.ImageField(
-                        blank=True, null=True, upload_to="accounts/uploads/"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="accounts/uploads/"),
                 ),
                 ("description", models.CharField(max_length=300)),
                 (
@@ -399,9 +393,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "price",
-                    djmoney.models.fields.MoneyField(
-                        decimal_places=2, default_currency="UAH", max_digits=14
-                    ),
+                    djmoney.models.fields.MoneyField(decimal_places=2, default_currency="UAH", max_digits=14),
                 ),
                 ("available", models.BooleanField(default=True)),
                 (
@@ -446,15 +438,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "amount",
-                    models.PositiveIntegerField(
-                        validators=[django.core.validators.MinValueValidator(1)]
-                    ),
+                    models.PositiveIntegerField(validators=[django.core.validators.MinValueValidator(1)]),
                 ),
                 (
                     "status",
-                    models.PositiveIntegerField(
-                        choices=[(0, "New"), (1, "Executed")], default=0
-                    ),
+                    models.PositiveIntegerField(choices=[(0, "New"), (1, "Executed")], default=0),
                 ),
                 ("timestamp", models.DateTimeField(auto_now_add=True)),
                 (

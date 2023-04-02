@@ -10,7 +10,7 @@ def account_generator(user_type=0):
     customer = Customer(
         email=faker.email(),
         phone_number=f"+38063{faker.random_int(min=100, max=999)}{faker.random_int(min=1000, max=9999)}",
-        user_type=user_type
+        user_type=user_type,
     )
     customer.set_password("12345678")
     customer.save()

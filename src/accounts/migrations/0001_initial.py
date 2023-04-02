@@ -34,9 +34,7 @@ class Migration(migrations.Migration):
                 ("password", models.CharField(max_length=128, verbose_name="password")),
                 (
                     "last_login",
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name="last login"
-                    ),
+                    models.DateTimeField(blank=True, null=True, verbose_name="last login"),
                 ),
                 (
                     "is_superuser",
@@ -49,9 +47,7 @@ class Migration(migrations.Migration):
                 (
                     "email",
                     models.EmailField(
-                        error_messages={
-                            "unique": "A user with that username already exists."
-                        },
+                        error_messages={"unique": "A user with that username already exists."},
                         max_length=254,
                         unique=True,
                         verbose_name="email address",
@@ -75,9 +71,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "date_joined",
-                    models.DateTimeField(
-                        default=django.utils.timezone.now, verbose_name="date joined"
-                    ),
+                    models.DateTimeField(default=django.utils.timezone.now, verbose_name="date joined"),
                 ),
                 (
                     "phone_number",
@@ -87,9 +81,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "user_type",
-                    models.PositiveIntegerField(
-                        choices=[(0, "Buyer"), (1, "Seller")], default=0
-                    ),
+                    models.PositiveIntegerField(choices=[(0, "Buyer"), (1, "Seller")], default=0),
                 ),
                 (
                     "groups",
@@ -138,9 +130,7 @@ class Migration(migrations.Migration):
                     "brand_name",
                     models.CharField(
                         max_length=150,
-                        validators=[
-                            accounts.utils.validators.brand_name_unique_validator
-                        ],
+                        validators=[accounts.utils.validators.brand_name_unique_validator],
                         verbose_name="brand name",
                     ),
                 ),
@@ -156,9 +146,7 @@ class Migration(migrations.Migration):
                 ("city", models.CharField(blank=True, max_length=255, null=True)),
                 (
                     "location",
-                    location_field.models.plain.PlainLocationField(
-                        blank=True, max_length=63, null=True
-                    ),
+                    location_field.models.plain.PlainLocationField(blank=True, max_length=63, null=True),
                 ),
                 (
                     "url",
@@ -167,9 +155,7 @@ class Migration(migrations.Migration):
                 ("rang", models.PositiveIntegerField(blank=True, null=True)),
                 (
                     "logo",
-                    models.ImageField(
-                        blank=True, null=True, upload_to="accounts/uploads/"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="accounts/uploads/"),
                 ),
                 (
                     "customer",
@@ -203,15 +189,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "birthdate",
-                    models.DateField(
-                        blank=True, null=True, verbose_name="day of birth"
-                    ),
+                    models.DateField(blank=True, null=True, verbose_name="day of birth"),
                 ),
                 (
                     "avatar",
-                    models.ImageField(
-                        blank=True, null=True, upload_to="accounts/uploads/"
-                    ),
+                    models.ImageField(blank=True, null=True, upload_to="accounts/uploads/"),
                 ),
                 (
                     "customer",

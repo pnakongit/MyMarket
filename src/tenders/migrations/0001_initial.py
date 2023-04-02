@@ -36,9 +36,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "status",
-                    models.PositiveIntegerField(
-                        choices=[(0, "New"), (1, "Executed")], default=0
-                    ),
+                    models.PositiveIntegerField(choices=[(0, "New"), (1, "Executed")], default=0),
                 ),
                 (
                     "buyer",
@@ -383,9 +381,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "total_price",
-                    djmoney.models.fields.MoneyField(
-                        decimal_places=2, default_currency="UAH", max_digits=14
-                    ),
+                    djmoney.models.fields.MoneyField(decimal_places=2, default_currency="UAH", max_digits=14),
                 ),
                 (
                     "seller",
@@ -411,9 +407,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "amount",
-                    models.PositiveIntegerField(
-                        validators=[django.core.validators.MinValueValidator(1)]
-                    ),
+                    models.PositiveIntegerField(validators=[django.core.validators.MinValueValidator(1)]),
                 ),
                 (
                     "products",
