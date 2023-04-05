@@ -1,0 +1,54 @@
+{% extends "core/index.html" %}
+
+{% block hero_item %}
+{% endblock %}
+
+{% block content %}
+    <!-- Seller Details Section Begin -->
+    <section class="product-details spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="product__details__pic">
+                        <div class="product__details__pic__item">
+                            <img class="product__details__pic__item--large"
+                                    {% if seller.logo %}
+                                 src={{ seller.logo.url }} >
+                                    {% else %}
+                                        alt="Logo not available">
+                                    {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="product__details__text">
+                        <h3>{{ seller.brand_name }}</h3>
+                        <h4>Rang : {{ seller.rang }}</h4>
+                        <p>Description : {{ seller.description }} </p>
+                        <ul>
+                            <li><b>Email</b><span> {{ seller.customer.email }} </span></li>
+                            <li><b>Phone number</b> <span> {{ seller.customer.phone_number }} </span></li>
+                            <li><b>City</b> <span>{{ seller.city }}</span></li>
+                            <li><b>Products found: </b> <span>{{ seller.product.all.count }}</span></li>
+                            <li><b>Location </b> <span>{{ seller.location }}</span></li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seller Details Section End -->
+
+    <!-- Product Section Begin -->
+    <section class="product spad">
+        <div class="container" >
+            <a href={% url "accounts:seller_profile_update" %} class="primary-btn">Edit Information</a>
+        </div>
+    </section>
+    <!-- Product Section End -->
+
+
+{% endblock %}

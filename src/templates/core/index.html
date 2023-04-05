@@ -54,12 +54,12 @@
             </ul>
         </div>
         <div class="header__top__right__auth">
-            <a href="#"><i class="fa fa-user"></i> Login</a>
+            <a href={% url "accounts:login" %}><i class="fa fa-user"></i> Login</a>
         </div>
     </div>
     <nav class="humberger__menu__nav mobile-menu">
         <ul>
-            <li class="active"><a href={% url "index" %}>Home</a></li>
+            <li class="active"><a href={% url "shops:index" %}>Home</a></li>
             <li><a href="./shop-grid.html">Shop</a></li>
             <li><a href="#">Pages</a>
                 <ul class="header__menu__dropdown">
@@ -110,12 +110,26 @@
                             <a href="#"><i class="fa fa-linkedin"></i></a>
                             <a href="#"><i class="fa fa-pinterest-p"></i></a>
                         </div>
-                        <div class="header__top__right__auth">
-                            <a href="#"><i class="fa fa-registered"></i> Register &nbsp </a>
-                        </div>
-                        <div class="header__top__right__auth">
-                            <a href="#"><i class="fa fa-user"></i> Login</a>
-                        </div>
+                        {% if user.is_authenticated %}
+                            <div class="header__top__right__auth">
+                                <a href="#"><i class="fa fa-user"></i> Profile &nbsp </a>
+                            </div>
+
+                        {% else %}
+                            <div class="header__top__right__auth">
+                                <a href={% url "accounts:registration" %}><i class="fa fa-registered"></i> Register &nbsp </a>
+                            </div>
+                        {% endif %}
+
+                        {% if user.is_authenticated %}
+                            <div class="header__top__right__auth">
+                                <a href={% url "accounts:logout" %}><i class="fa fa-user"></i> Logout</a>
+                            </div>
+                        {% else %}
+                            <div class="header__top__right__auth">
+                                <a href={% url "accounts:login" %}><i class="fa fa-user"></i> Login</a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -125,13 +139,13 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="header__logo">
-                    <a href={% url "index" %}><img src={% static "img/logo.png" %} alt=""></a>
+                    <a href={% url "shops:index" %}><img src={% static "img/logo.png" %} alt=""></a>
                 </div>
             </div>
             <div class="col-lg-offset-6">
                 <nav class="header__menu">
                     <ul>
-                        <li class="active"><a href={% url "index" %}>Home</a></li>
+                        <li class="active"><a href={% url "shops:index" %}>Home</a></li>
                         <li><a href="#">Sellers</a></li>
                         <li><a href="#">Products</a></li>
                         <li><a href="#">Categories</a></li>

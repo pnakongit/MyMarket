@@ -24,7 +24,7 @@ def account_generator(user_type=0):
     else:
         seller = SellerProfile.objects.get(pk=customer.seller_profile.pk)
         seller.brand_name = faker.company()
-        seller.city = faker.city
+        seller.city = faker.city()
         seller.save()
 
     return customer

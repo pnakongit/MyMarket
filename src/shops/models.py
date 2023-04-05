@@ -9,7 +9,9 @@ class Product(models.Model):
     description = models.CharField(max_length=300)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='UAH')
     available = models.BooleanField(default=True)
-    seller = models.ForeignKey(to="accounts.SellerProfile", related_name="product", on_delete=models.CASCADE)
+    seller = models.ForeignKey(
+        to="accounts.SellerProfile", null=True, blank=True, related_name="product", on_delete=models.CASCADE
+    )
     category = models.ForeignKey(to="shops.Category", related_name="product", on_delete=models.SET_NULL, null=True)
     brand = models.ForeignKey(to="shops.Brand", related_name="product", on_delete=models.SET_NULL, null=True)
 

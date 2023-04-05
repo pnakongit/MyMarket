@@ -43,7 +43,7 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ["phone_number"]
 
     class Meta:
         verbose_name = _("Customer")
