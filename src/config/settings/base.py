@@ -60,6 +60,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "config.urls"
 
+LOGIN_REDIRECT_URL = "accounts:index"
+LOGOUT_REDIRECT_URL = "accounts:login"
+LOGIN_URL = "accounts:login"
+
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

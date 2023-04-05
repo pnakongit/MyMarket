@@ -1,0 +1,21 @@
+{% extends "core/index.html" %}
+{% load crispy_forms_tags %}
+
+{% block hero_item %}
+
+{% endblock %}
+
+{% block content %}
+    <!-- Product Details Section Begin -->
+    <div>
+        <form method="POST" style="width: 25em; align-content: center; margin: auto;" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form | crispy }}
+            <br>
+            <button type="submit" class="site-btn" value="update">Update</button>
+        </form>
+    </div>
+
+
+
+{% endblock %}

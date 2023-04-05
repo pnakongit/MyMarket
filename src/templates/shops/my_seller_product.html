@@ -1,0 +1,88 @@
+{% extends "core/index.html" %}
+
+{% block hero_item %}
+{% endblock %}
+
+{% block content %}
+    <div class="section-title">
+        <h2>My products </h2>
+    </div>
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__table">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="shoping__product">Image</th>
+                                <th class="shoping__product">Product</th>
+                                <th class="shoping__product">Price</th>
+                                <th class="shoping__product">Available</th>
+                                <th>Edit</th>
+                                <th>Dellet</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            {% for product in products %}
+                                <tbody>
+                                <tr>
+                                    <td class="shoping__cart__item">
+                                        {% if product.image %}
+                                            <img src={{ product.image.url }} alt=""
+                                                 style="height: 100px; width: 150px;">
+                                        {% else %}
+                                            <h5> No image </h5>
+                                        {% endif %}
+                                    </td>
+                                    <td class="shoping__cart__item">
+                                        <h5>{{ product.product_name }} </h5>
+                                    </td>
+                                    <td class="shoping__cart__item">
+                                        {{ product.price }}
+                                    </td>
+                                    <td class="shoping__cart__item">
+                                        {% if product.available %}
+                                            <h5>available </h5>
+                                        {% else %}
+                                            <h5>not available </h5>
+                                        {% endif %}
+                                    </td>
+                                    <td class="shoping__cart__item__close">
+                                        <a href={% url "shops:seller_product_update" product.pk %}><span
+                                                class="fa fa-pencil-square" aria-hidden="true"
+                                                style="color: #00e061;"></span> </a>
+                                    </td>
+                                    <td class="shoping__cart__item__close">
+                                        <a href={% url "shops:seller_product_delete" product.pk %}><span
+                                                class="fa fa-trash" aria-hidden=" true" style="color: #e04300;"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            {% empty %}
+                                <div class="section-title">
+                                    <h4>Please added your firs products ;)) </h4>
+                                </div>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__btns">
+                        <a href={% url "shops:seller_product_create" %} class="primary-btn cart-btn
+                           cart-btn-right"><span class="fa fa-plus"
+                                                 aria-hidden="true"></span>
+                        Add new product</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shoping Cart Section End -->
+
+
+{% endblock %}
