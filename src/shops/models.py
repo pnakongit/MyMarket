@@ -40,7 +40,9 @@ class Order(models.Model):
         NEW = 0, "New"
         EXECUTED = 1, "Executed"
 
-    buyer = models.ForeignKey(to="accounts.BuyerProfile", related_name="order", on_delete=models.CASCADE)
+    buyer = models.ForeignKey(
+        to="accounts.BuyerProfile", related_name="order", on_delete=models.CASCADE, blank=True, null=True
+    )
     product = models.ForeignKey(to="shops.Product", related_name='order', on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     status = models.PositiveIntegerField(choices=StatusChoices.choices, default=StatusChoices.NEW)

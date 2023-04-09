@@ -25,19 +25,23 @@
                         <h3>{{ product.product_name }}</h3>
                         <div class="product__details__price">{{ product.price }}</div>
                         <p>{{ product.description }} </p>
-                        <div class="product__details__quantity">
-                            <div class="quantity">
-                                <div class="pro-qty">
-                                    <input type="text" value="1">
+                        <form action={% url "shops:shopping_cart_update_post" %} method="POST">
+                            {% csrf_token %}
+                            <div class="product__details__quantity">
+
+                                <div class="quantity">
+                                    <div class="pro-qty">
+                                        <input  type="text" name="product_{{ product.pk }}" value="1"/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {% if product.available %}
-                            <a href="#" class="primary-btn">ADD TO CARD</a>
-                        {% else %}
-                            <a class="primary-btn">Now not available</a>
-                        {% endif %}
-                        <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                            {% if product.available %}
+{#                                <a href="#" class="primary-btn">ADD TO CARD</a>#}
+                                <input type="submit" class="btn btn-outline-success" name="update" value="ADD TO CARD"/>
+                            {% else %}
+                                <a class="primary-btn">Now not available</a>
+                            {% endif %}
+                        </form>
                         <ul>
                             <li><b>Availability</b>
                                 <span>

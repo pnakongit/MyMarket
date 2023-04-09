@@ -1,18 +1,22 @@
+import re
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render  # NOQA : F401
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   TemplateView, UpdateView)
 from webargs import fields, validate
 from webargs.djangoparser import use_kwargs
 
 from accounts.models import SellerProfile
-from core.permissions import SellerTypeRequiredMixin
-from shops.forms import ProductCreateForm, ProductUpdateForm
-from shops.models import Product
+from core.permissions import BuyerTypeRequiredMixin, SellerTypeRequiredMixin
+from core.utils.helpers import (add_shopping_cart_information_to_session,
+                                get_shopping_cart_data)
+from shops.forms import ArticleFormSet, ProductCreateForm, ProductUpdateForm
+from shops.models import Order, Product
 from shops.tasks import orders_generator_task, products_generator_task
 
 
@@ -123,37 +127,72 @@ class ShoppingCart(TemplateView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         shopping_cart = request.session.get("shopping_cart", None)
-        print(shopping_cart)
 
         if shopping_cart:
-            or_filter = Q()
-            for product in shopping_cart:
-                or_filter |= Q(pk=product)
+            shopping_cart_data = get_shopping_cart_data(request)
 
-            products = Product.objects.filter(or_filter)
-
-            shopping_cart_data = {}
-            total_price = 0
-
-            for product in products:
-                total_price_of_product = product.price * shopping_cart.get(f"{product.pk}")
-                shopping_cart_data.update(
-                    {
-                        product.pk: {
-                            "product_name": product.product_name,
-                            "product_price": product.price,
-                            "count": shopping_cart.get(f"{product.pk}"),
-                            "total_price_of_product": total_price_of_product,
-                            "seller": product.seller.brand_name,
-                            "url": product.image.url if product.image else "",
-                        }
-                    }
-                )
-                total_price += total_price_of_product
-
-            context.update({"shopping_cart_data": shopping_cart_data, "total_price": total_price})
+            context.update(**shopping_cart_data)
 
         return self.render_to_response(context)
+
+
+class ShoppingCartAddProductRedirect(View):
+    def get(self, request, *args, **kwargs):
+        product_pk = kwargs.get("pk")
+        quantity = kwargs.get("quantity")
+        if all([product_pk, quantity]):
+            add_shopping_cart_information_to_session(request, product_pk=product_pk, quantity=quantity)
+        return HttpResponseRedirect(reverse_lazy("shops:shopping_cart"))
+
+
+class ShoppingCartUpdateProductRedirectPost(View):
+    http_method_names = [
+        'post',
+    ]
+
+    def post(self, request, *args, **kwargs):
+        for key, value in request.POST.items():
+            if re.match(r"^product_", key):
+                add_shopping_cart_information_to_session(request, product_pk=key[8:], quantity=value)
+
+        if "check_out" in request.POST:
+            return HttpResponseRedirect(reverse_lazy("shops:check_out"))
+
+        if "update" in request.POST:
+            return HttpResponseRedirect(reverse_lazy("shops:shopping_cart"))
+
+        return HttpResponseRedirect(reverse_lazy("shops:index"))
+
+
+class ShoppingCartDeleteProductRedirect(View):
+    def get(self, request, *args, **kwargs):
+        product_pk = kwargs.get("pk")
+
+        add_shopping_cart_information_to_session(request, product_pk=product_pk, delete=True)
+        return HttpResponseRedirect(reverse_lazy("shops:shopping_cart"))
+
+
+class CheckOutView(LoginRequiredMixin, BuyerTypeRequiredMixin, ShoppingCart):
+    template_name = "shops/check_out.html"
+
+
+class OrderCreatePostView(LoginRequiredMixin, BuyerTypeRequiredMixin, View):
+    http_method_names = [
+        'post',
+    ]
+
+    def post(self, request, *args, **kwargs):
+        for key, value in request.POST.items():
+            if re.match(r"^product_", key):
+                product = Product.objects.get(pk=key[8:])
+                new_order = Order()
+                new_order.product = product
+                new_order.amount = value
+                new_order.buyer = request.user.buyer_profile
+                new_order.save()
+        del request.session["shopping_cart"]
+
+        return HttpResponseRedirect(reverse_lazy("shops:index"))
 
 
 @use_kwargs(
@@ -176,3 +215,14 @@ def generate_products_view(request, count):
 def generate_orders_view(request, count):
     orders_generator_task.delay(count)
     return HttpResponse('Task is started')
+
+
+def my_test_view(request, *args, **kwargs):
+    print(request.POST)
+
+    formset = ArticleFormSet()
+    if request.POST:
+        formset = ArticleFormSet(request.POST)
+        print(formset.total_form_count())
+
+    return render(request, template_name="shops/test_view.html", context={"formset": formset})
