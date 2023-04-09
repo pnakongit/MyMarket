@@ -39,7 +39,7 @@
     <div class="humberger__menu__cart">
         <ul>
             <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+            <li><a href={% url "shops:shopping_cart" %}><i class="fa fa-shopping-bag"></i> <span>5</span></a></li>
         </ul>
         <div class="header__cart__price">item: <span>$150.00</span></div>
     </div>
@@ -117,7 +117,8 @@
 
                         {% else %}
                             <div class="header__top__right__auth">
-                                <a href={% url "accounts:registration" %}><i class="fa fa-registered"></i> Register &nbsp </a>
+                                <a href={% url "accounts:registration" %}><i class="fa fa-registered"></i> Register
+                                    &nbsp </a>
                             </div>
                         {% endif %}
 
@@ -157,7 +158,8 @@
                 <div class="header__cart">
                     <ul>
                         <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                        <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                        <li><a href={% url "shops:shopping_cart" %}><i class="fa fa-shopping-bag"></i>
+                            <span>3</span></a></li>
                     </ul>
                     <div class="header__cart__price">item: <span>$150.00</span></div>
                 </div>
@@ -275,9 +277,8 @@
                                         "...">
                                     {% endif %}
                             <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                <li><a href={% url "shops:shopping_cart_add" product.pk 1 %}><i
+                                        class="fa fa-shopping-cart"></i></a></li>
                             </ul>
                             </div>
                             <div class="featured__item__text">
@@ -318,9 +319,8 @@
                                     {% endif %}
 
                             <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                <li><a href={% url "shops:seller_details" seller.pk %}><i
+                                        class="fa fa-retweet"></i></a></li>
                             </ul>
                             </div>
                             <div class="featured__item__text">

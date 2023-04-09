@@ -23,25 +23,3 @@ class IndexView(TemplateView):
 
         return self.render_to_response(context)
 
-
-def test_session(request):
-    # if request.session.get("shopping_cart", None):
-    #     "ShoppingCart"
-    #     request.session["test"] = request.session["test"] + '!'
-    #     return HttpResponse(request.session.get("test"))
-    pk = 1
-    count = 2
-
-    if not request.session.get("shopping_cart"):
-        request.session["shopping_cart"] = {}
-
-    shopping_cart = {
-        pk: count,
-    }
-    # print(request.session["shopping_cart"])
-
-    print(request.user)
-
-    request.session["shopping_cart"].update(shopping_cart)
-    request.session.save()
-    return HttpResponse("done")

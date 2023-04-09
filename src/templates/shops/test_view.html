@@ -1,0 +1,36 @@
+{% extends "core/index.html" %}
+
+{% block hero_item %}
+{% endblock %}
+
+{% block content %}
+
+
+    <a> SSSSSS </a>
+
+    <form method="post">
+        {{ formset.management_form }}
+        {% for forms in formset %}
+            {% csrf_token %}
+            <td class="shoping__cart__quantity">
+                <div class="quantity">
+                    <div class="pro-qty">
+                        {#                        {{ forms.title }}#}
+                        <input  type="text" id="count" value=2 readonly>
+                    </div>
+                </div>
+            </td>
+        {% endfor %}
+        <button type="submit" name="action" value="update">Update</button>
+        <button type="submit" formaction="/action_one" name="action" value="delete">Delete</button>
+    </form>
+
+    <form action={% url "shops:shopping_cart_update_post" %} method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="hidden" name="book_token" value="{{ book.token }}">
+
+        <input type="submit" class="submit_btn btn label-success" value="Update">
+        <input type="submit" formaction="/action_one" class="submit_btn btn label-success" value="Update1">
+    </form>
+{% endblock content %}
