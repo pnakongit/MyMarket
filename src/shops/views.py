@@ -2,7 +2,6 @@ import re
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render  # NOQA : F401
 from django.urls import reverse_lazy
@@ -13,10 +12,11 @@ from webargs import fields, validate
 from webargs.djangoparser import use_kwargs
 
 from accounts.models import SellerProfile
-from core.permissions import SellerTypeRequiredMixin, BuyerTypeRequiredMixin
-from core.utils.helpers import add_shopping_cart_information_to_session, get_shopping_cart_data
-from shops.forms import ProductCreateForm, ProductUpdateForm, ArticleFormSet
-from shops.models import Product, Order
+from core.permissions import BuyerTypeRequiredMixin, SellerTypeRequiredMixin
+from core.utils.helpers import (add_shopping_cart_information_to_session,
+                                get_shopping_cart_data)
+from shops.forms import ArticleFormSet, ProductCreateForm, ProductUpdateForm
+from shops.models import Order, Product
 from shops.tasks import orders_generator_task, products_generator_task
 
 
@@ -137,7 +137,6 @@ class ShoppingCart(TemplateView):
 
 
 class ShoppingCartAddProductRedirect(View):
-
     def get(self, request, *args, **kwargs):
         product_pk = kwargs.get("pk")
         quantity = kwargs.get("quantity")
@@ -147,7 +146,9 @@ class ShoppingCartAddProductRedirect(View):
 
 
 class ShoppingCartUpdateProductRedirectPost(View):
-    http_method_names = ['post', ]
+    http_method_names = [
+        'post',
+    ]
 
     def post(self, request, *args, **kwargs):
         for key, value in request.POST.items():
@@ -162,6 +163,7 @@ class ShoppingCartUpdateProductRedirectPost(View):
 
         return HttpResponseRedirect(reverse_lazy("shops:index"))
 
+
 class ShoppingCartDeleteProductRedirect(View):
     def get(self, request, *args, **kwargs):
         product_pk = kwargs.get("pk")
@@ -175,7 +177,9 @@ class CheckOutView(LoginRequiredMixin, BuyerTypeRequiredMixin, ShoppingCart):
 
 
 class OrderCreatePostView(LoginRequiredMixin, BuyerTypeRequiredMixin, View):
-    http_method_names = ['post', ]
+    http_method_names = [
+        'post',
+    ]
 
     def post(self, request, *args, **kwargs):
         for key, value in request.POST.items():

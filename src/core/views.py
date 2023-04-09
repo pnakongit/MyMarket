@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render  # NOQA : F401
 from django.views.generic import TemplateView
 
@@ -22,4 +21,3 @@ class IndexView(TemplateView):
         context.update({"category": category, "brands": brands, "products": products, "sellers": sellers})
 
         return self.render_to_response(context)
-

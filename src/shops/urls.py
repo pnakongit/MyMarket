@@ -1,13 +1,15 @@
 from django.urls import path
 
 from core.views import IndexView
-from shops.views import (ProductCreateView, ProductDeleteView, ProductDetails,
-                         ProductsByBrand, ProductsByCategory,
-                         ProductUpdateView, SellerDetails, SellerProductView,
-                         ShoppingCart, generate_orders_view,
-                         generate_products_view, my_test_view,
-                         ShoppingCartAddProductRedirect, ShoppingCartUpdateProductRedirectPost,
-                         ShoppingCartDeleteProductRedirect, OrderCreatePostView, CheckOutView)
+from shops.views import (CheckOutView, OrderCreatePostView, ProductCreateView,
+                         ProductDeleteView, ProductDetails, ProductsByBrand,
+                         ProductsByCategory, ProductUpdateView, SellerDetails,
+                         SellerProductView, ShoppingCart,
+                         ShoppingCartAddProductRedirect,
+                         ShoppingCartDeleteProductRedirect,
+                         ShoppingCartUpdateProductRedirectPost,
+                         generate_orders_view, generate_products_view,
+                         my_test_view)
 
 app_name = 'shops'
 
@@ -18,10 +20,12 @@ urlpatterns = [
     path("products-by-category/<int:pk>/", ProductsByCategory.as_view(), name="products_by_category"),
     path("shopping-cart/", ShoppingCart.as_view(), name="shopping_cart"),
     path("shopping-cart/update/", ShoppingCartUpdateProductRedirectPost.as_view(), name="shopping_cart_update_post"),
-    path("shopping-cart/add/<int:pk>/quantity/<int:quantity>", ShoppingCartAddProductRedirect.as_view(),
-         name="shopping_cart_add"),
-    path("shopping-cart/delete/<int:pk>/", ShoppingCartDeleteProductRedirect.as_view(),
-         name="shopping_cart_delete"),
+    path(
+        "shopping-cart/add/<int:pk>/quantity/<int:quantity>",
+        ShoppingCartAddProductRedirect.as_view(),
+        name="shopping_cart_add",
+    ),
+    path("shopping-cart/delete/<int:pk>/", ShoppingCartDeleteProductRedirect.as_view(), name="shopping_cart_delete"),
     path("check-out/", CheckOutView.as_view(), name="check_out"),
     path("order/create/", OrderCreatePostView.as_view(), name="order_create_post_view"),
     path("seller/<int:pk>", SellerDetails.as_view(), name="seller_details"),
@@ -33,4 +37,3 @@ urlpatterns = [
     path("my-seller/product/delete/<int:pk>/", ProductDeleteView.as_view(), name="seller_product_delete"),
     path("test/", my_test_view, name="my_test_view"),
 ]
-

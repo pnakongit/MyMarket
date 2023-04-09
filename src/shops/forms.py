@@ -1,5 +1,6 @@
-from django.forms import ModelForm, formset_factory
 from django import forms
+from django.forms import ModelForm, formset_factory
+
 from shops.models import Product
 
 
@@ -20,5 +21,5 @@ class ProductUpdateForm(ModelForm):
 class ArticleForm(forms.Form):
     title = forms.CharField()
 
-ArticleFormSet = formset_factory(ArticleForm)
 
+ArticleFormSet = formset_factory(ArticleForm)
