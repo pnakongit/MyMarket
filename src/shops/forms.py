@@ -1,5 +1,4 @@
-from django import forms
-from django.forms import ModelForm, formset_factory
+from django.forms import ModelForm
 
 from shops.models import Product, Order
 
