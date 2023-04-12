@@ -33,6 +33,9 @@
 <!-- Humberger Begin -->
 <div class="humberger__menu__overlay"></div>
 <div class="humberger__menu__wrapper">
+    <div class="humberger__menu__logo">
+        <a href="#"><img src={% static "img/logo.png" %} alt=""></a>
+    </div>
     <div class="humberger__menu__cart">
         <ul>
             <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
@@ -101,7 +104,7 @@
                                     <a href={% url "shops:seller_product_all" %}><i class="fa fa-user"></i> My Account
                                         &nbsp </a>
                                 {% else %}
-                                    <a href={% url "accounts:buyer_profile" %}><i class="fa fa-user"></i> My Account &nbsp </a>
+                                    <a href="#"><i class="fa fa-user"></i> My Account &nbsp </a>
                                 {% endif %}
                             </div>
                         {% else %}
@@ -128,6 +131,9 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
+                <div class="header__logo">
+                    <a href={% url "shops:index" %}><img src={% static "img/logo.png" %} alt=""></a>
+                </div>
             </div>
             <div class="col-lg-offset-6">
                 <nav class="header__menu">
@@ -153,11 +159,11 @@
                     <div class="header__cart__price">item: <span>$150.00</span></div>
                 </div>
             </div>
+            </div>
         </div>
-    </div>
-    <div class="humberger__open">
-        <i class="fa fa-bars"></i>
-    </div>
+        <div class="humberger__open">
+            <i class="fa fa-bars"></i>
+        </div>
     </div>
 </header>
 <!-- Header Section End -->
@@ -167,6 +173,17 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
+                <div class="hero__categories">
+                    <div class="hero__categories__all">
+                        <i class="fa fa-bars"></i>
+                        <span>All categories </span>
+                    </div>
+                    <ul>
+                        {% for i in category %}
+                            <li><a href={% url "shops:products_by_category" i.pk %}>{{ i.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
             <div class="col-lg-9">
                 <div class="hero__search">
@@ -176,9 +193,25 @@
                             <button type="submit" class="site-btn">SEARCH</button>
                         </form>
                     </div>
-
+                    <div class="hero__search__phone">
+                        <div class="hero__search__phone__icon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="hero__search__phone__text">
+                            <h5>+65 11.188.888</h5>
+                            <span>support 24/7 time</span>
+                        </div>
+                    </div>
                 </div>
                 {% block hero_item %}
+                    <div class="hero__item set-bg" data-setbg={% static "img/hero/banner.jpg" %}>
+                        <div class="hero__text">
+                            <span>MyMarket</span>
+                            <h2>Top market <br/>10000% </h2>
+                            <p>Free Delivery Available</p>
+                            <a href={% url "shops:products" %} class="primary-btn">SHOP NOW</a>
+                        </div>
+                    </div>
                 {% endblock %}
             </div>
         </div>

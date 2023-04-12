@@ -52,42 +52,42 @@ class UserLogoutView(LoginRequiredMixin, LogoutView):
     ...
 
 
-class SellerProfileView(LoginRequiredMixin, SellerTypeRequiredMixin, DetailView):
-    context_object_name = "seller"
-    form_class = SellerProfileUpdateForm
-    template_name = "accounts/seller_profile.html"
+class CustomObjectGet:
+    profile_model = ""
 
     def get_object(self, queryset=None):
         try:
-            obj = SellerProfile.objects.get(customer=self.request.user)
+            obj = self.profile_model.objects.get(customer=self.request.user)
         except queryset.model.DoesNotExist:
             raise Http404(_("No  found matching the query"))
         return obj
 
 
-class SellerProfileUpdateView(LoginRequiredMixin, SellerTypeRequiredMixin, UpdateView):
+class BuyerProfileView(LoginRequiredMixin, BuyerTypeRequiredMixin, CustomObjectGet, DetailView):
+    profile_model = BuyerProfile
+    context_object_name = "buyer"
+    form_class = BuyerProfileUpdateForm
+    template_name = "accounts/buyer_profile.html"
+
+
+class BuyerProfileUpdateView(LoginRequiredMixin, BuyerTypeRequiredMixin, CustomObjectGet, UpdateView):
+    context_object_name = "form"
+    form_class = BuyerProfileUpdateForm
+    success_url = reverse_lazy("accounts:buyer_profile")
+    template_name = "accounts/buyer_profile_update.html"
+    profile_model = BuyerProfile
+
+
+class SellerProfileView(LoginRequiredMixin, SellerTypeRequiredMixin, CustomObjectGet, DetailView):
+    context_object_name = "seller"
+    form_class = SellerProfileUpdateForm
+    template_name = "accounts/seller_profile.html"
+    profile_model = SellerProfile
+
+
+class SellerProfileUpdateView(LoginRequiredMixin, SellerTypeRequiredMixin, CustomObjectGet, UpdateView):
     context_object_name = "form"
     form_class = SellerProfileUpdateForm
     success_url = reverse_lazy("accounts:seller_profile")
     template_name = "accounts/seller_profile_update.html"
-
-    def get_object(self, queryset=None):
-        try:
-            obj = SellerProfile.objects.get(customer=self.request.user)
-        except queryset.model.DoesNotExist:
-            raise Http404(_("No  found matching the query"))
-        return obj
-
-
-class BuyerProfileUpdateView(LoginRequiredMixin, BuyerTypeRequiredMixin, UpdateView):
-    context_object_name = "form"
-    form_class = BuyerProfileUpdateForm
-    success_url = reverse_lazy("shops:index")
-    template_name = "accounts/buyer_profile_update.html"
-
-    def get_object(self, queryset=None):
-        try:
-            obj = BuyerProfile.objects.get(customer=self.request.user)
-        except queryset.model.DoesNotExist:
-            raise Http404(_("No  found matching the query"))
-        return obj
+    profile_model = SellerProfile

@@ -1,5 +1,6 @@
 import re
 
+from django_filters.views import FilterView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseRedirect
@@ -15,15 +16,26 @@ from accounts.models import SellerProfile
 from core.permissions import BuyerTypeRequiredMixin, SellerTypeRequiredMixin
 from core.utils.helpers import (add_shopping_cart_information_to_session,
                                 get_shopping_cart_data)
-from shops.forms import ArticleFormSet, ProductCreateForm, ProductUpdateForm
+from shops.filters import ProductFilters, SellerFilters
+from shops.forms import ProductCreateForm, ProductUpdateForm, OrderUpdateStatusForm
 from shops.models import Order, Product
 from shops.tasks import orders_generator_task, products_generator_task
+
+
+class ProductsView(FilterView):
+    filterset_class = ProductFilters
+    template_name = "shops/products.html"
 
 
 class ProductDetails(DetailView):
     queryset = Product.objects.all()
     template_name = "shops/product_details.html"
     context_object_name = "product"
+
+
+class SellersView(FilterView):
+    filterset_class = SellerFilters
+    template_name = "shops/sellers.html"
 
 
 class SellerDetails(DetailView):
@@ -78,6 +90,60 @@ class SellerProductView(LoginRequiredMixin, SellerTypeRequiredMixin, ListView):
         return queryset
 
 
+class SellerNewOrderView(LoginRequiredMixin, SellerTypeRequiredMixin, ListView):
+    template_name = "shops/seller_order_new.html"
+    context_object_name = "orders"
+    order_status = Order.StatusChoices.NEW
+
+    def get_queryset(self):
+
+        queryset = Order.objects.filter(status=self.order_status).filter(
+            product__seller=self.request.user.seller_profile)
+
+        ordering = self.get_ordering()
+        if ordering:
+            if isinstance(ordering, str):
+                ordering = (ordering,)
+            queryset = queryset.order_by(*ordering)
+        return queryset
+
+
+class SellerInWorkOrderView(SellerNewOrderView):
+    template_name = "shops/seller_order_in_work.html"
+    order_status = Order.StatusChoices.IN_WORK
+
+
+class SellerHistoryOrderView(SellerNewOrderView):
+    template_name = "shops/seller_order_history.html"
+    order_status = Order.StatusChoices.EXECUTED
+
+
+class SellerOrderStatusUpdateView(LoginRequiredMixin, SellerTypeRequiredMixin, UpdateView):
+    template_name = "shops/seller_order_update.html"
+    context_object_name = "form"
+    form_class = OrderUpdateStatusForm
+    queryset = Order.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.object.product.seller != request.user.seller_profile:
+            raise PermissionDenied("No permission")
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        if "form" not in kwargs:
+            kwargs["form"] = self.get_form()
+
+        kwargs["order"] = Order.objects.get(pk=self.kwargs.get("pk"))
+        return super().get_context_data(**kwargs)
+
+    def get_success_url(self):
+        _success_url = reverse_lazy("shops:seller_orders_status_update", kwargs={"pk": self.object.pk})
+        return str(_success_url)
+
+
 class ProductCreateView(LoginRequiredMixin, SellerTypeRequiredMixin, CreateView):
     context_object_name = "form"
     form_class = ProductCreateForm
@@ -119,6 +185,43 @@ class ProductDeleteView(LoginRequiredMixin, SellerTypeRequiredMixin, DeleteView)
             raise PermissionDenied("No permission")
 
         return super().get(request, *args, **kwargs)
+
+
+class BuyerOrderDetailsView(DetailView):
+    template_name = "shops/buyer_order_details.html"
+    queryset = Order.objects.all()
+    context_object_name = "order"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.object.buyer != request.user.buyer_profile:
+            raise PermissionDenied("No permission")
+
+        return super().get(request, *args, **kwargs)
+
+
+class BuyerOrderActiveView(LoginRequiredMixin, BuyerTypeRequiredMixin, ListView):
+    template_name = "shops/buyer_order_active.html"
+    context_object_name = "orders"
+    order_status = [Order.StatusChoices.NEW, Order.StatusChoices.IN_WORK, ]
+
+    def get_queryset(self):
+
+        queryset = Order.objects.filter(status__in=self.order_status).filter(
+            buyer=self.request.user.buyer_profile)
+
+        ordering = self.get_ordering()
+        if ordering:
+            if isinstance(ordering, str):
+                ordering = (ordering,)
+            queryset = queryset.order_by(*ordering)
+        return queryset
+
+
+class BuyerOrderHistoryView(BuyerOrderActiveView):
+    template_name = "shops/buyer_order_history.html"
+    order_status = [Order.StatusChoices.EXECUTED, ]
 
 
 class ShoppingCart(TemplateView):
@@ -195,6 +298,26 @@ class OrderCreatePostView(LoginRequiredMixin, BuyerTypeRequiredMixin, View):
         return HttpResponseRedirect(reverse_lazy("shops:index"))
 
 
+class SearchView(TemplateView):
+    template_name = "shops/search.html"
+    http_method_names = ["get", ]
+
+    @use_kwargs(
+        {
+            'search': fields.Str(required=True, ),
+        },
+        location='query',
+    )
+    def get(self, request, *args, **kwargs):
+        _context = self.get_context_data(**kwargs)
+
+        products = Product.objects.all().filter(product_name__icontains=kwargs.get("search"))
+
+        _context.update({"products": products})
+
+        return self.render_to_response(_context)
+
+
 @use_kwargs(
     {
         'count': fields.Int(required=True, validate=[validate.Range(min=1, max=100)]),
@@ -218,11 +341,8 @@ def generate_orders_view(request, count):
 
 
 def my_test_view(request, *args, **kwargs):
-    print(request.POST)
-
-    formset = ArticleFormSet()
-    if request.POST:
-        formset = ArticleFormSet(request.POST)
-        print(formset.total_form_count())
-
-    return render(request, template_name="shops/test_view.html", context={"formset": formset})
+    user_list = Product.objects.all()
+    print(request.GET)
+    user_filter = ProductFilters(request.GET, queryset=user_list)
+    print(user_filter)
+    return render(request, template_name="shops/test_view.html", context={"filter": user_filter})

@@ -1,0 +1,84 @@
+{% extends "shops/base_buyer_account.html" %}
+
+{% block content %}
+
+    <!-- Checkout Section Begin -->
+    <section class="checkout spad">
+        <div class="container">
+            <div class="checkout__form">
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4> Seller: </h4>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="checkout__input">
+                                    <p>Brand name</p>
+                                    <input type="text" value="{{ order.product.seller.brand_name }}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Phone</p>
+                                    <input type="text" value="{{ order.product.seller.customer.phone_number }}"
+                                           readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Email</p>
+                                    <input type="text" value="{{ order.product.seller.customer.phone_number }}"
+                                           readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>City</p>
+                                    <input type="text" value="{{ order.product.seller.city }}"
+                                           readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Url</p>
+                                    <input type="text" value="{{ order.product.seller.url }}"
+                                           readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            {% csrf_token %}
+                            <div class="checkout__order__products">Product details:</div>
+                            <ul>
+                                <li> Name <span> {{ order.product.product_name }}</span></li>
+                            </ul>
+                            <ul>
+                                <li> Quantity <span> {{ order.amount }}</span></li>
+                            </ul>
+                            <ul>
+                                <li> Price <span> {{ order.product.price }}</span></li>
+                            </ul>
+                            <div class="checkout__order__total">Total <span>{{ order.total_price }}</span></div>
+                            <ul>
+                                <li> Status <span> {{ order.get_status_display }}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="d-grid gap-2 col-2 mx-auto">
+        <a href="{% url "shops:buyer_orders_active" %}">
+            <input type="button" class="site-btn" value="Back to order"/>
+        </a>
+        <!-- Checkout Section End -->
+    </div>
+{% endblock content %}

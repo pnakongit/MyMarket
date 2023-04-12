@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm, formset_factory
 
-from shops.models import Product
+from shops.models import Product, Order
 
 
 class ProductCreateForm(ModelForm):
@@ -18,8 +18,7 @@ class ProductUpdateForm(ModelForm):
         exclude = ("seller",)
 
 
-class ArticleForm(forms.Form):
-    title = forms.CharField()
-
-
-ArticleFormSet = formset_factory(ArticleForm)
+class OrderUpdateStatusForm(ModelForm):
+    class Meta:
+        model = Order
+        fields = ("status",)
