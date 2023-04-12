@@ -1,17 +1,20 @@
 from django.urls import path
 
 from core.views import IndexView
-from shops.views import (CheckOutView, OrderCreatePostView, ProductCreateView,
+from shops.views import (BuyerOrderActiveView, BuyerOrderDetailsView,
+                         BuyerOrderHistoryView, CheckOutView,
+                         OrderCreatePostView, ProductCreateView,
                          ProductDeleteView, ProductDetails, ProductsByBrand,
-                         ProductsByCategory, ProductUpdateView, SellerDetails,
-                         SellerProductView, ShoppingCart,
+                         ProductsByCategory, ProductsView, ProductUpdateView,
+                         SearchView, SellerDetails, SellerHistoryOrderView,
+                         SellerInWorkOrderView, SellerNewOrderView,
+                         SellerOrderStatusUpdateView, SellerProductView,
+                         SellersView, ShoppingCart,
                          ShoppingCartAddProductRedirect,
                          ShoppingCartDeleteProductRedirect,
                          ShoppingCartUpdateProductRedirectPost,
                          generate_orders_view, generate_products_view,
-                         my_test_view, ProductsView, SellersView, SearchView, SellerNewOrderView,
-                         SellerOrderStatusUpdateView, SellerInWorkOrderView, SellerHistoryOrderView,
-                         BuyerOrderActiveView, BuyerOrderHistoryView, BuyerOrderDetailsView)
+                         my_test_view)
 
 app_name = 'shops'
 
@@ -42,8 +45,11 @@ urlpatterns = [
     path("my-seller/orders/new/", SellerNewOrderView.as_view(), name="seller_orders_new"),
     path("my-seller/orders/in-work/", SellerInWorkOrderView.as_view(), name="seller_orders_in_work"),
     path("my-seller/orders/history/", SellerHistoryOrderView.as_view(), name="seller_orders_history"),
-    path("my-seller/orders/status-update/<int:pk>/", SellerOrderStatusUpdateView.as_view(),
-         name="seller_orders_status_update"),
+    path(
+        "my-seller/orders/status-update/<int:pk>/",
+        SellerOrderStatusUpdateView.as_view(),
+        name="seller_orders_status_update",
+    ),
     path("my-buyer/orders/<int:pk>/", BuyerOrderDetailsView.as_view(), name="buyer_orders_details"),
     path("my-buyer/orders/active/", BuyerOrderActiveView.as_view(), name="buyer_orders_active"),
     path("my-buyer/orders/history/", BuyerOrderHistoryView.as_view(), name="buyer_orders_history"),

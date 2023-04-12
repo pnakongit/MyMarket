@@ -90,7 +90,7 @@ class SellerProfile(models.Model):
     city = models.CharField(max_length=255, blank=True, null=True)
     location = PlainLocationField(based_fields=['city'], zoom=7, blank=True, null=True)
     url = models.URLField(unique=True, blank=True, null=True, max_length=250)
-    rang = models.PositiveIntegerField(blank=True, null=True)
+    rank = models.PositiveIntegerField(blank=True, null=True)
     logo = models.ImageField(upload_to='accounts/uploads/', null=True, blank=True)
 
     def __str__(self):

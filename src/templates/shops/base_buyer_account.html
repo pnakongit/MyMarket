@@ -118,9 +118,9 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-3">
+            <div class="col-lg-4">
             </div>
-            <div class="col-lg-offset-6">
+            <div class="col-lg-offset-5">
                 <nav class="header__menu">
                     <ul>
                         <li class="active"><a href={% url "shops:index" %}>Home</a></li>
@@ -138,14 +138,14 @@
                         </li>
                         <li><a>Tenders</a>
                             <ul class="header__menu__dropdown">
-                                <li><a href=" ">My profile</a></li>
-                                <li><a href=" ">Update profile</a></li>
+                                <li><a href="{% url "tenders:tender_create" %}">Create Tender </a></li>
+                                <li><a href="{% url "tenders:buyer_account_all_tender" %}">All tenders</a></li>
                             </ul>
                         </li>
                     </ul>
                 </nav>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="header__cart">
                     <ul>
                         <li><a href={% url "shops:shopping_cart" %}><i class="fa fa-shopping-bag"></i>

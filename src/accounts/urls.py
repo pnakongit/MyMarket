@@ -1,8 +1,9 @@
 from django.urls import path
 
-from accounts.views import (BuyerProfileUpdateView, SellerProfileUpdateView,
-                            SellerProfileView, UserLoginView, UserLogoutView,
-                            UserRegistrationView, generate_accounts_view, BuyerProfileView)
+from accounts.views import (BuyerProfileUpdateView, BuyerProfileView,
+                            SellerProfileUpdateView, SellerProfileView,
+                            UserLoginView, UserLogoutView,
+                            UserRegistrationView, generate_accounts_view)
 
 app_name = 'accounts'
 
