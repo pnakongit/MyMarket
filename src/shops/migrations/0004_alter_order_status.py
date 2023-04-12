@@ -12,8 +12,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="order",
             name="status",
-            field=models.PositiveIntegerField(
-                choices=[(0, "New"), (1, "In work"), (2, "Executed")], default=0
-            ),
+            field=models.PositiveIntegerField(choices=[(0, "New"), (1, "In work"), (2, "Executed")], default=0),
         ),
     ]

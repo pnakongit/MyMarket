@@ -1,0 +1,14 @@
+{% extends "shops/base_buyer_account.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div>
+        <form method="post" style="width: 25em; align-content: center; margin: auto;">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="site-btn" type="create"> Create</button>
+        </form>
+    </div>
+
+{% endblock %}

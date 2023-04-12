@@ -1,13 +1,15 @@
+{% extends "shops/base_buyer_account.html" %}
+{% load crispy_forms_tags %}
 
-
-    <form>
+{% block content %}
+    <form method="GET">
         {% for form in filter.form %}
-            {{ form }}
-            {{ form }}
+            {{ form.label_tag }} <br>
+            {{ form  }} <br><br>
         {% endfor %}
-
-    <button type="submit"> Submit </button>
+    <button type="submit"> Submit  </button>
     </form>
-    {% for product in filter.qs %}
-        {{ product }}
+    {% for elem in filter.qs %}
+        {{ elem }}
     {% endfor %}
+{% endblock %}

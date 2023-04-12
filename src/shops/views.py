@@ -1,6 +1,5 @@
 import re
 
-from django_filters.views import FilterView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseRedirect
@@ -9,6 +8,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   TemplateView, UpdateView)
+from django_filters.views import FilterView
 from webargs import fields, validate
 from webargs.djangoparser import use_kwargs
 
@@ -17,7 +17,8 @@ from core.permissions import BuyerTypeRequiredMixin, SellerTypeRequiredMixin
 from core.utils.helpers import (add_shopping_cart_information_to_session,
                                 get_shopping_cart_data)
 from shops.filters import ProductFilters, SellerFilters
-from shops.forms import ProductCreateForm, ProductUpdateForm, OrderUpdateStatusForm
+from shops.forms import (OrderUpdateStatusForm, ProductCreateForm,
+                         ProductUpdateForm)
 from shops.models import Order, Product
 from shops.tasks import orders_generator_task, products_generator_task
 
@@ -96,9 +97,9 @@ class SellerNewOrderView(LoginRequiredMixin, SellerTypeRequiredMixin, ListView):
     order_status = Order.StatusChoices.NEW
 
     def get_queryset(self):
-
         queryset = Order.objects.filter(status=self.order_status).filter(
-            product__seller=self.request.user.seller_profile)
+            product__seller=self.request.user.seller_profile
+        )
 
         ordering = self.get_ordering()
         if ordering:
@@ -204,12 +205,13 @@ class BuyerOrderDetailsView(DetailView):
 class BuyerOrderActiveView(LoginRequiredMixin, BuyerTypeRequiredMixin, ListView):
     template_name = "shops/buyer_order_active.html"
     context_object_name = "orders"
-    order_status = [Order.StatusChoices.NEW, Order.StatusChoices.IN_WORK, ]
+    order_status = [
+        Order.StatusChoices.NEW,
+        Order.StatusChoices.IN_WORK,
+    ]
 
     def get_queryset(self):
-
-        queryset = Order.objects.filter(status__in=self.order_status).filter(
-            buyer=self.request.user.buyer_profile)
+        queryset = Order.objects.filter(status__in=self.order_status).filter(buyer=self.request.user.buyer_profile)
 
         ordering = self.get_ordering()
         if ordering:
@@ -221,7 +223,9 @@ class BuyerOrderActiveView(LoginRequiredMixin, BuyerTypeRequiredMixin, ListView)
 
 class BuyerOrderHistoryView(BuyerOrderActiveView):
     template_name = "shops/buyer_order_history.html"
-    order_status = [Order.StatusChoices.EXECUTED, ]
+    order_status = [
+        Order.StatusChoices.EXECUTED,
+    ]
 
 
 class ShoppingCart(TemplateView):
@@ -300,11 +304,15 @@ class OrderCreatePostView(LoginRequiredMixin, BuyerTypeRequiredMixin, View):
 
 class SearchView(TemplateView):
     template_name = "shops/search.html"
-    http_method_names = ["get", ]
+    http_method_names = [
+        "get",
+    ]
 
     @use_kwargs(
         {
-            'search': fields.Str(required=True, ),
+            'search': fields.Str(
+                required=True,
+            ),
         },
         location='query',
     )

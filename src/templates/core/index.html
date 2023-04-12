@@ -136,7 +136,7 @@
                         <li><a href={% url "shops:sellers" %}>Sellers</a></li>
                         <li><a href={% url "shops:products" %}>Products</a></li>
                         <li><a href="#">Categories</a></li>
-                        <li><a href="#">Tenders</a></li>
+                        <li><a href={% url "tenders:all_tender" %}>Tenders</a></li>
                     </ul>
                 </nav>
             </div>
@@ -284,7 +284,7 @@
                             </div>
                             <div class="featured__item__text">
                                 <h6><a href={% url "shops:seller_details" seller.pk %}>{{ seller.brand_name }}</a></h6>
-                                <h5>Rang {{ seller.rang }}</h5>
+                                <h5>Rank {{ seller.rank }}</h5>
                             </div>
                         </div>
                     </div>
