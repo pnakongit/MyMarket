@@ -38,7 +38,8 @@ class Brand(models.Model):
 class Order(models.Model):
     class StatusChoices(models.IntegerChoices):
         NEW = 0, "New"
-        EXECUTED = 1, "Executed"
+        IN_WORK = 1, "In work"
+        EXECUTED = 2, "Executed"
 
     buyer = models.ForeignKey(
         to="accounts.BuyerProfile", related_name="order", on_delete=models.CASCADE, blank=True, null=True

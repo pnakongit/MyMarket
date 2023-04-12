@@ -76,6 +76,9 @@ class BuyerProfile(models.Model):
     birthdate = models.DateField(_("day of birth"), blank=True, null=True)
     avatar = models.ImageField(upload_to='accounts/uploads/', null=True, blank=True)
 
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
     def __str__(self):
         return f"{self.pk} {self.first_name} {self.last_name}"
 

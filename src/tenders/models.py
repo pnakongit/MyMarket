@@ -6,13 +6,17 @@ from djmoney.models.fields import MoneyField
 
 
 class Tender(models.Model):
+    TENDER_START_DAYS = 1
     TENDER_EXPIRATION_DAYS = 10
 
     class StatusChoices(models.IntegerChoices):
         NEW = 0, "New"
-        EXECUTED = 1, "Executed"
+        PUBLISHED = 1, "Published"
+        EXECUTED = 2, "Executed"
+        CANCELED = 3, "Canceled"
 
     buyer = models.ForeignKey(to="accounts.BuyerProfile", related_name="tender", on_delete=models.CASCADE)
+    start_day = models.DateField(default=date.today()+timedelta(days=TENDER_START_DAYS))
     end_day = models.DateField(default=date.today() + timedelta(days=TENDER_EXPIRATION_DAYS))
     description = models.CharField(max_length=300, null=True, blank=True)
     status = models.PositiveIntegerField(choices=StatusChoices.choices, default=StatusChoices.NEW)
@@ -36,3 +40,4 @@ class Request(models.Model):
 
     def __str__(self):
         return f"{self.seller} request {self.pk}"
+

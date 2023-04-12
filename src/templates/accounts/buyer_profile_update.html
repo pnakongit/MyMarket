@@ -1,4 +1,4 @@
-{% extends "core/index.html" %}
+{% extends "shops/base_buyer_account.html" %}
 {% load crispy_forms_tags %}
 
 {% block hero_item %}
@@ -12,7 +12,7 @@
             {% csrf_token %}
             {{ form | crispy }}
             <br>
-            <button type="submit" class="btn btn-primary" value="update">Update</button>
+            <button type="submit" class="site-btn" value="update">Update</button>
         </form>
     </div>
 

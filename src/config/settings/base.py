@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_filters",
     "phonenumber_field",
     "location_field.apps.DefaultConfig",
     "django_extensions",
@@ -63,7 +64,6 @@ ROOT_URLCONF = "config.urls"
 LOGIN_REDIRECT_URL = "accounts:index"
 LOGOUT_REDIRECT_URL = "accounts:login"
 LOGIN_URL = "accounts:login"
-
 
 TEMPLATES = [
     {
@@ -163,7 +163,6 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(minute="4", hour="5", day_of_month="3", month_of_year="9"),
     },
 }
-
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
