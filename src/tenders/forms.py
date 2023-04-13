@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from tenders.models import ProductParameter, Tender, Request
+from tenders.models import ProductParameter, Tender
 
 
 class TenderCreateForm(ModelForm):

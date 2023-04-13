@@ -1,5 +1,5 @@
 from django import forms
-from django_filters import CharFilter, DateFilter, FilterSet, NumberFilter, ModelMultipleChoiceFilter
+from django_filters import CharFilter, DateFilter, FilterSet, NumberFilter
 
 from tenders.models import Tender
 
