@@ -37,13 +37,32 @@
                         <strong>{{ tender.get_status_display }}</strong>
                     </li>
                 </ul>
-                {% if user.is_authenticated and user.seller_profile.rank >= tender.minimum_required_rank %}
+                {% if tender_request %}
+                    <div class="alert alert-success" role="alert">
+                        <span> You have already send request for participation in the tender. </span>
+                    </div>
+                    <form method="post" action="{% url "tenders:tender_request_delete_post" %}">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="hidden" id="custId" name="tender_request_pk"
+                                   value={{ tender_request.pk }}>
+                            <input type="hidden" id="custId" name="tender_pk" value={{ tender.pk }}>
+                            <button type="submit" class="site-btn">Delete request</button>
+                        </div>
+                    </form>
+                {% elif user.is_authenticated and user.seller_profile.rank >= tender.minimum_required_rank %}
                     <div class="card p-2">
-                        <form action={% url "tenders:tender_status_update" tender.pk %} method="post">
+                        <div class="alert alert-success" role="alert">
+                            <span> You can send a request to participate in the tender! Specify the price and send the request </span>
+                        </div>
+                        <form method="post" action="{% url "tenders:tender_request_create_post" %}">
                             {% csrf_token %}
-                            <button value="Send a tender request" name="send_a_tender_request" class="site-btn">Send a
-                                tender request
-                            </button>
+                            <div class="input-group">
+                                <input type="hidden" id="custId" name="tender" value={{ tender.pk }}>
+                                <input type="number" name="total_price" class="form-control"
+                                       placeholder="Total price for tender">
+                                <button type="submit" class="site-btn">Send request</button>
+                            </div>
                         </form>
                     </div>
                 {% elif  user.is_authenticated and user.user_type == 0 %}
@@ -105,10 +124,10 @@
                             <tbody>
                             {% for request in tender.request.all %}
                                 <tr>
-                                    <th>{{ product_parameter.products.product_name }}</th>
-                                    <td>{{ product_parameter.products.pk }}</td>
-                                    <td>{{ product_parameter.products.brand.name }}</td>
-                                    <td>{{ product_parameter.products.category.name }}</td>
+                                    <th>{{ request.seller.brand_name }}</th>
+                                    <td>{{ request.seller.rank }}</td>
+                                    <td>{{ request.total_price }}</td>
+                                    <td>{{ request.winner }}</td>
                                 </tr>
                             {% empty %}
                                 <tr>

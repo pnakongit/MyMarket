@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from tenders.models import ProductParameter, Tender
+from tenders.models import ProductParameter, Tender, Request
 
 
 class TenderCreateForm(ModelForm):
@@ -13,3 +13,4 @@ class CreateProductParameterForm(ModelForm):
     class Meta:
         model = ProductParameter
         fields = ["products", "amount"]
+

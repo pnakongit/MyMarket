@@ -101,25 +101,30 @@
                                 <th style="width: 34%;">Seller</th>
                                 <th style="width: 22%;">Seller rank</th>
                                 <th style="width: 22%;">Total price</th>
-                                <th style="width: 22%;">Winner</th>
+                                <th style="width: 22%;">Select winner</th>
                             </tr>
                             </thead>
-                            {#                            {% if tender.request.all %}#}
                             <tbody>
                             {% for request in tender.request.all %}
                                 <tr>
-                                    <th>{{ product_parameter.products.product_name }}</th>
-                                    <td>{{ product_parameter.products.pk }}</td>
-                                    <td>{{ product_parameter.products.brand.name }}</td>
-                                    <td>{{ product_parameter.products.category.name }}</td>
+                                    <th>{{ request.seller.brand_name }}</th>
+                                    <td>{{ request.seller.rank }}</td>
+                                    <td>{{ request.total_price }}</td>
+                                    <td>
+                                        <form action={% url "tenders:tender_status_update" tender.pk %} method="post">
+                                            {% csrf_token %}
+                                            <button value="Publish a tender" name="publish_a_tender"
+                                                    class="site-btn"> Select
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <th><h5> No requests yet:) </h5></th>
+                                    <th><h5> No requests yet! Be first !)) </h5></th>
                                 </tr>
                             {% endfor %}
                             </tbody>
-                            {#                            {% endif %}#}
                         </table>
                     </div>
                 {% endif %}
