@@ -1,5 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import QuerySet
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render  # NOQA : F401
 from django.urls import reverse_lazy
@@ -7,10 +9,10 @@ from django.views import View
 from django.views.generic import CreateView, TemplateView
 from django_filters.views import FilterView
 
-from core.permissions import BuyerTypeRequiredMixin
-from tenders.filters import TendersBuyerFilter, TendersFilter
+from core.permissions import BuyerTypeRequiredMixin, SellerTypeRequiredMixin
+from tenders.filters import TendersBuyerFilter, TendersFilter, TendersSellerFilter
 from tenders.forms import CreateProductParameterForm, TenderCreateForm
-from tenders.models import Tender
+from tenders.models import Tender, Request
 
 
 class TenderCreateView(LoginRequiredMixin, BuyerTypeRequiredMixin, CreateView):
@@ -83,9 +85,14 @@ class TenderStatusUpdatePostView(LoginRequiredMixin, BuyerTypeRequiredMixin, Vie
         return HttpResponseRedirect(_success_url)
 
 
-class BuyerTendersView(FilterView):
+class BuyerTendersView(LoginRequiredMixin, BuyerTypeRequiredMixin, FilterView):
     template_name = "tenders/buyer_tenders.html"
     filterset_class = TendersBuyerFilter
+
+
+class SellerTendersView(LoginRequiredMixin, SellerTypeRequiredMixin, FilterView):
+    template_name = "tenders/seller_tenders.html"
+    filterset_class = TendersSellerFilter
 
 
 class TendersView(FilterView):
@@ -101,9 +108,45 @@ class TenderDetailsView(TemplateView):
 
         tender = get_object_or_404(Tender, pk=kwargs.get("pk"))
 
-        if tender.status != Tender.StatusChoices.PUBLISHED:
+        if tender.status == Tender.StatusChoices.NEW:
             return HttpResponseRedirect(reverse_lazy("tenders:all_tender"))
 
+        tender_request = None
+        if request.user.is_authenticated:
+            if request.user.user_type == get_user_model().TypeChoices.SELLER:
+                tender_request = Request.objects.filter(tender=tender).filter(seller=request.user.seller_profile)
+
+        if isinstance(tender_request, QuerySet) and tender_request:
+            tender_request = tender_request[0]
+
         context["tender"] = tender
+        context["tender_request"] = tender_request
 
         return self.render_to_response(context)
+
+
+class SellerCreateTenderRequestPostView(LoginRequiredMixin, SellerTypeRequiredMixin, View):
+    http_method_names = ["post", ]
+
+    def post(self, request, *args, **kwargs):
+        tender = get_object_or_404(Tender, pk=request.POST.get("tender"))
+        seller = request.user.seller_profile
+
+        tender_request = Request(
+            tender=tender,
+            seller=seller,
+            total_price=request.POST.get("total_price"),
+        )
+        tender_request.save()
+
+        return HttpResponseRedirect(reverse_lazy("tenders:tender_details", kwargs={"pk": tender.pk}))
+
+
+class SellerDeleteTenderRequestPostView(SellerCreateTenderRequestPostView):
+    def post(self, request, *args, **kwargs):
+        print(request.POST.get("tender_request_pk"))
+        tender_request = get_object_or_404(Request, pk=request.POST.get("tender_request_pk"))
+        tender_request.delete()
+
+        return HttpResponseRedirect(
+            reverse_lazy("tenders:tender_details", kwargs={"pk": request.POST.get("tender_pk")}))
