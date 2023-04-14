@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     "djmoney",
     "crispy_forms",
     "crispy_bootstrap5",
+    "django_inlinecss",
     "accounts",
     "core",
     "shops",
@@ -76,6 +78,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.all_categories_context_processors",
             ],
         },
     },
@@ -162,8 +165,20 @@ CELERY_BEAT_SCHEDULE = {
         "task": "accounts.tasks.test_task",
         "schedule": crontab(minute="4", hour="5", day_of_month="3", month_of_year="9"),
     },
+    "tender_status_change": {
+        "task": "tenders.tasks.tender_status_change_task",
+        "schedule": crontab(minute="0", hour="0", day_of_month="*", month_of_year="*", day_of_week="*"),
+    },
 }
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = 587
+EMAIL_FAIL_SILENTLY = False

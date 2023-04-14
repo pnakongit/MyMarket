@@ -61,7 +61,8 @@ class TendersSellerFilter(FilterSet):
     class Meta:
         model = Tender
         fields = [
-            "status", "tender_name",
+            "status",
+            "tender_name",
         ]
 
     @property
