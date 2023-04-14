@@ -16,7 +16,8 @@ class IndexView(TemplateView):
         category = Category.objects.all()
         brands = Brand.objects.all()
         products = Product.objects.filter(pk__lte=_product_limit_on_page)
-        sellers = SellerProfile.objects.filter(rank__gte=SellerProfile.objects.count() - _seller_limit_on_page)
+
+        sellers = SellerProfile.objects.all().order_by("-rank")[:_seller_limit_on_page]
 
         context.update({"category": category, "brands": brands, "products": products, "sellers": sellers})
 

@@ -5,7 +5,7 @@ from djmoney.models.fields import MoneyField
 
 class Product(models.Model):
     product_name = models.CharField(max_length=150)
-    image = models.ImageField(upload_to='accounts/uploads/', null=True, blank=True)
+    image = models.ImageField(upload_to='shops/products/uploads/', null=True, blank=True)
     description = models.CharField(max_length=300)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='UAH')
     available = models.BooleanField(default=True)
@@ -21,7 +21,7 @@ class Product(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=150)
-    image = models.ImageField(upload_to='accounts/uploads/', null=True, blank=True)
+    image = models.ImageField(upload_to='shops/category/uploads/', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -29,7 +29,7 @@ class Category(models.Model):
 
 class Brand(models.Model):
     name = models.CharField(max_length=150)
-    image = models.ImageField(upload_to='accounts/uploads/', null=True, blank=True)
+    image = models.ImageField(upload_to='shops/brand/uploads/', null=True, blank=True)
 
     def __str__(self):
         return self.name

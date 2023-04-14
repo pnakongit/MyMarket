@@ -29,7 +29,11 @@ if os.environ.get("GITHUB_WORKFLOW"):
     }
 else:
     DATABASES = {
-        'default': {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        },
+        'default_postgresql': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.environ.get("POSTGRES_DB"),
             'USER': os.environ.get("POSTGRES_USER"),
