@@ -1,0 +1,108 @@
+{% extends "core/index.html" %}
+
+{% block hero_item %}
+{% endblock %}
+
+{% block content %}
+    <div class="section-title">
+        <h2>Shopping cart</h2>
+    </div>
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__table">
+                        <form method="post" action= {% url "shops:shopping_cart_update_post" %}>
+                            {% csrf_token %}
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th class="shoping__product">Products</th>
+                                    <th class="shoping__product">Seller</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+
+                                {% for product, value in shopping_cart_data.items %}
+                                    <tbody>
+                                    <tr>
+                                        <td class="shoping__cart__item">
+                                            <img src={{ value.url }} alt="..." style="height: 100px; width: 150px;">
+                                            <h5>{{ value.product_name }} </h5>
+                                        </td>
+                                        <td class="shoping__cart__item">
+                                            <h5>{{ value.seller }} </h5>
+                                        </td>
+                                        <td class="shoping__cart__price">
+                                            {{ value.product_price }}
+                                        </td>
+                                        <td class="shoping__cart__quantity">
+                                            <div class="quantity">
+                                                <div class="pro-qty">
+                                                    <input type="text" name="product_{{ product }}"
+                                                           value={{ value.count }} readonly>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="shoping__cart__total">
+                                            {{ value.total_price_of_product }}
+                                        </td>
+                                        <td class="shoping__cart__item__close">
+                                            <a href= {% url "shops:shopping_cart_delete" product %}><i> <span
+                                                    class="icon_close"></span> </i> </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                {% empty %}
+                                    <h5>You need add product to shopping card first )</h5>
+                                {% endfor %}
+                            </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__btns">
+                        <div class="d-grid gap-2 d-md-flex">
+                            <button type="submit" name="continue_shopping" value="CONTINUE_SHOPPING"
+                                    class="site-btn">CONTINUE SHOPPING
+                            </button>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" name="update" value="UPDATE" class="site-btn"><span
+                                    class="icon_loading"></span> UPDATE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {#                !!!!#}
+
+
+            {#        !!!!#}
+            <div class="col-lg-6">
+                    <div class="shoping__checkout">
+                        <h5>Cart Total</h5>
+                        <ul>
+                            <li>Total price <span>{{ total_price }}</span></li>
+                        </ul>
+                        <div class="d-grid gap-6">
+                            <button type="submit" name="check_out"
+                                    class="site-btn" value="CHECK OUT">CHECK OUT
+                            </button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shoping Cart Section End -->
+
+
+{% endblock %}

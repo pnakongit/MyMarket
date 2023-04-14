@@ -1,0 +1,22 @@
+{% extends "shops/base_seller_account.html" %}
+{% load crispy_forms_tags %}
+
+{% block hero_item %}
+
+{% endblock %}
+
+{% block content %}
+    <!-- Product Details Section Begin -->
+    <div>
+        <form method="post">{% csrf_token %}
+            <div class="section-title">
+                <h2>Are you sure you want to delete "{{ object }}"? </h2>
+
+                <input type="submit" class="site-btn" value="Confirm">
+            </div>
+        </form>
+    </div>
+
+
+
+{% endblock %}

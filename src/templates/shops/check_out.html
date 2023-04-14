@@ -1,0 +1,72 @@
+{% extends "core/index.html" %}
+
+{% block hero_item %}
+{% endblock %}
+
+{% block content %}
+
+    <!-- Checkout Section Begin -->
+    <section class="checkout spad">
+        <div class="container">
+            <div class="checkout__form">
+                <h4>Billing Details</h4>
+                <form action="{% url "shops:order_create_post_view" %}" method="POST">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-8 col-md-6">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Fist Name</p>
+                                        <input type="text" value="{{ user.buyer_profile.first_name }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Last Name</p>
+                                        <input type="text" value="{{ user.buyer_profile.last_name }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Phone</p>
+                                        <input type="text" value={{ user.phone_number }} readonly>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Email</p>
+                                        <input type="text" value={{ user.email }} readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="checkout__order">
+                                <h4>Your Order</h4>
+                                <div class="checkout__order__products">Products <span>Total</span></div>
+                                <ul>
+                                    {% for product, value in shopping_cart_data.items %}
+                                        <li> {{ value.product_name }}
+                                            <span> {{ value.total_price_of_product }}</span></li>
+                                        <input hidden type="text" name="product_{{ product }}"
+                                               value={{ value.count }} readonly>
+                                    {% empty %}
+                                        <p> Not product </p>
+                                    {% endfor %}
+                                </ul>
+                                <div class="checkout__order__total">Total <span>{{ total_price }}</span></div>
+
+                                <button type="submit" class="site-btn">PLACE ORDER</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- Checkout Section End -->
+
+{% endblock content %}

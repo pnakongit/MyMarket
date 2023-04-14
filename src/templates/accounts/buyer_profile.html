@@ -1,0 +1,72 @@
+{% extends "shops/base_buyer_account.html" %}
+
+{% block content %}
+
+
+    <section class="checkout spad">
+        <div class="container">
+        <form class="needs-validation" action={% url "accounts:buyer_profile_update" %}>
+            <div class="row g-5">
+                <div class="col-md-5 col-lg-4 order-md-last">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-3">Avatar</h4>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        <div class="featured__item__pic set-bg" data-setbg=
+                                {% if buyer.avatar %}
+                                    {{ buyer.avatar.url }}>
+                                {% else %}
+                                    "...">
+                                {% endif %}
+                        </div>
+                    </ul>
+
+                </div>
+                <div class="col-md-7 col-lg-8">
+                    <h4 class="mb-3">Profile details</h4>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label for="firstName" class="form-label">First name</label>
+                                <input type="text" class="form-control" id="firstName" value="{{ buyer.first_name }}"
+                                       readonly>
+                                <div class="invalid-feedback">
+                                    Valid first name is required.
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="lastName" class="form-label">Last name</label>
+                                <input type="text" class="form-control" id="lastName" value="{{ buyer.last_name }}"
+                                       readonly>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="date" class="form-label">Date of Birth</label>
+                                <input type="text" class="form-control" id="date"
+                                       value="{{ buyer.birthdate }}" readonly>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" value="{{ buyer.customer.email }}"
+                                       readonly>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="phnone" class="form-label">Phone number <span
+                                        class="text-muted">(Optional)</span></label>
+                                <input type="text" class="form-control" id="email"
+                                       value="{{ buyer.customer.phone_number }}"
+                                       readonly>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+                            <div class="d-grid gap-2">
+                                <button class="site-btn" type="submit">Update</button>
+                            </div>
+        </form>
+        </div>
+    </section>
+{% endblock %}

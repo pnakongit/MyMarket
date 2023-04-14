@@ -1,0 +1,80 @@
+{% extends "shops/base_buyer_account.html" %}
+{% load crispy_forms_tags %}
+
+{% block hero_item %}
+{% endblock %}
+
+{% block content %}
+    <!-- Product Section Begin -->
+    <section class="product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-5">
+                    <div class="sidebar">
+                        <div class="sidebar__item">
+                            <h4>Filters:</h4>
+                            <form method="get">
+                                {% for form in filter.form %}
+                                    <h5 class="title">{{ form.label_tag }} </h5>
+                                    {{ form }}
+                                    <br>
+                                    <br>
+                                {% endfor %}
+                                <button type="submit" class="site-btn">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-7">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="shoping__cart__table">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th class="shoping__product">Name</th>
+                                        <th class="shoping__product">End day</th>
+                                        <th class="shoping__product">Status</th>
+                                        <th>Details</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    {% for tender in filter.qs %}
+                                        <tbody>
+                                        <tr>
+                                            <td class="shoping__cart__item">
+                                                <h5>{{ tender.tender_name }} </h5>
+                                            </td>
+                                            <td class="shoping__cart__item">
+                                                <h5>{{  tender.end_day }} </h5>
+                                            </td>
+                                            <td class="shoping__cart__item">
+                                                <h5>{{ tender.get_status_display }} </h5>
+                                            </td>
+                                            <td class="shoping__cart__item__close">
+                                                <a href={% url "tenders:buyer_tender_details" tender.pk %}><span
+                                                        class="fa fa-pencil-square" aria-hidden="true"
+                                                        style="color: #00e061;"></span> </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    {% empty %}
+                                        <td>
+
+                                            <h6>Tenders not found ;(( </h6>
+
+                                        </td>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Product Section End -->
+
+
+
+{% endblock %}
