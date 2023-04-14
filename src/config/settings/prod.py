@@ -15,7 +15,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR.parent / 'static'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR.parent / 'media'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DATABASES = {
     "default": {
