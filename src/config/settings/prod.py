@@ -4,9 +4,9 @@ from config.settings.base import *  # NOQA
 
 DEBUG = False
 
-SECRET_KEY = "django-insecure-s4hy4e0bscfl)objduu9@*!889_7ewf$e!)ganyn!r(zx(me$*"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "ec2-16-16-115-131.eu-north-1.compute.amazonaws.com"]
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [

@@ -2,7 +2,7 @@ from config.settings.base import *  # NOQA
 
 DEBUG = False
 
-SECRET_KEY = "django-insecure-s4hy4e0bscfl)objduu9@*!889_7ewf$e!)ganyn!r(zx(me$*"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 ALLOWED_HOSTS = []
 
