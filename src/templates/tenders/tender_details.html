@@ -1,0 +1,152 @@
+{% extends "core/index.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-md-5 col-lg-4 order-md-last">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="mb-3">Tender details</span>
+                </h4>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Tender name</h6>
+                            <small class="text-muted">{{ tender.tender_name }}</small>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Description</h6>
+                            <small class="text-muted">{{ tender.description }}</small>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">End day</h6>
+                            <small class="text-muted">{{ tender.end_day }}</small>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Minimum seller rank</h6>
+                            <small class="text-muted">{{ tender.minimum_required_rank }}</small>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Status: </span>
+                        <strong>{{ tender.get_status_display }}</strong>
+                    </li>
+                </ul>
+                {% if tender.status == 1 %}
+                    {% if tender_request %}
+                        <div class="alert alert-success" role="alert">
+                            <span> You have already send request for participation in the tender. </span>
+                        </div>
+                        <form method="post" action="{% url "tenders:tender_request_delete_post" %}">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="hidden" id="custId" name="tender_request_pk"
+                                       value={{ tender_request.pk }}>
+                                <input type="hidden" id="custId" name="tender_pk" value={{ tender.pk }}>
+                                <button type="submit" class="site-btn">Delete request</button>
+                            </div>
+                        </form>
+                    {% elif user.is_authenticated and user.seller_profile.rank >= tender.minimum_required_rank %}
+                        <div class="card p-2">
+                            <div class="alert alert-success" role="alert">
+                                <span> You can send a request to participate in the tender! Specify the price and send the request </span>
+                            </div>
+                            <form method="post" action="{% url "tenders:tender_request_create_post" %}">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input type="hidden" id="custId" name="tender" value={{ tender.pk }}>
+                                    <input type="number" name="total_price" class="form-control"
+                                           placeholder="Total price for tender">
+                                    <button type="submit" class="site-btn">Send request</button>
+                                </div>
+                            </form>
+                        </div>
+                    {% elif  user.is_authenticated and user.user_type == 0 %}
+                        <div class="alert alert-primary" role="alert">
+                            <strong>Warning: </strong>
+                            <span>Only seller can send request</span>
+                        </div>
+                    {% elif user.is_authenticated %}
+                        <div class="alert alert-primary" role="alert">
+                            <strong>Warning: </strong>
+                            <span>Your rank is {{ user.seller_profile.rank }}, this is not enough to send request!
+                            Minimum rank is {{ tender.minimum_required_rank }}</span>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-primary" role="alert">
+                            <strong>Warning: </strong>
+                            <span>Only a registered seller with a rank greater than {{ tender.minimum_required_rank }} can send requests</span>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-md-7 col-lg-8">
+                <h4 class="mb-3">Products:</h4>
+                <div class="table-responsive">
+                    <table class="table text-center">
+                        <thead>
+                        <tr>
+                            <th style="width: 34%;">Product name</th>
+                            <th style="width: 22%;">Amount</th>
+                            <th style="width: 22%;">Product brand</th>
+                            <th style="width: 22%;">Category</th>
+                        </tr>
+                        </thead>
+                        {% if tender.product_parameter.all %}
+                            <tbody>
+                            {% for product_parameter in tender.product_parameter.all %}
+                                <tr>
+                                    <th>{{ product_parameter.products }}</th>
+                                    <td>{{ product_parameter.amount }}</td>
+                                    <td>{{ product_parameter.brand.name }}</td>
+                                    <td>{{ product_parameter.category.name }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% endif %}
+                    </table>
+                </div>
+                {% if tender.status != 0 %}
+                    <h4 class="mb-3">Requests:</h4>
+                    <div class="table-responsive">
+                        <table class="table text-center">
+                            <thead>
+                            <tr>
+                                <th style="width: 34%;">Seller</th>
+                                <th style="width: 22%;">Seller rank</th>
+                                <th style="width: 22%;">Total price</th>
+                                <th style="width: 22%;">Winner</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for request in tender.request.all %}
+                                <tr>
+                                    <th>{{ request.seller.brand_name }}</th>
+                                    <td>{{ request.seller.rank }}</td>
+                                    <td>{{ request.total_price }}</td>
+                                    <td>
+                                        {% if request.winner %}
+                                            WINNER
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <th><h5> No requests yet! Be first !)) </h5></th>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

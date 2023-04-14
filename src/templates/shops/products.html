@@ -1,0 +1,63 @@
+{% extends "core/index.html" %}
+{% load crispy_forms_tags %}
+
+{% block hero_item %}
+{% endblock %}
+
+{% block content %}
+    <!-- Product Section Begin -->
+    <section class="product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-5">
+                    <div class="sidebar">
+                        <div class="sidebar__item">
+                            <h4>Filters:</h4>
+                            <form method="get">
+                                {% for form in filter.form %}
+                                    <h5 class="title">{{ form.label_tag }} </h5>
+                                    {{ form }}
+                                    <br>
+                                    <br>
+                                {% endfor %}
+                                <button type="submit" class="site-btn">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-7">
+                    <div class="row">
+                        {% for product in filter.qs %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg=
+                                            {% if product.image %}
+                                                {{ product.image.url }}>
+                                            {% else %}
+                                                "...">
+                                            {% endif %}
+                                    <ul class="product__item__pic__hover">
+                                        <li><a href={% url "shops:shopping_cart_add" product.pk 1 %}><i
+                                                class="fa fa-shopping-cart"></i></a></li>
+                                    </ul>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6>
+                                            <a href={% url "shops:product_details" product.pk %}>{{ product.product_name }}</a>
+                                        </h6>
+                                        <h5>{{ product.price }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <h4> Products not found </h4>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Product Section End -->
+
+
+{% endblock %}
