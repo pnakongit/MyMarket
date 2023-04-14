@@ -93,6 +93,13 @@
                     </div>
                 {% endif %}
                 {% if tender.status != 0 %}
+                    {% if tender.status == 1 and tender.request.all.exists %}
+                        <div class="alert alert-success" role="alert">
+                            If you don't select a winner by the tender closing date, the winner will be the lowest
+                            priced
+                            winner selected automatically
+                        </div>
+                    {% endif %}
                     <h4 class="mb-3">Requests:</h4>
                     <div class="table-responsive">
                         <table class="table text-center">
@@ -101,7 +108,12 @@
                                 <th style="width: 34%;">Seller</th>
                                 <th style="width: 22%;">Seller rank</th>
                                 <th style="width: 22%;">Total price</th>
-                                <th style="width: 22%;">Select winner</th>
+                                {% if tender.status == 1 %}
+                                    <th style="width: 22%;">Select Winner</th>
+                                {% else %}
+                                    <th style="width: 22%;">Winner</th>
+                                {% endif %}
+
                             </tr>
                             </thead>
                             <tbody>
@@ -111,12 +123,19 @@
                                     <td>{{ request.seller.rank }}</td>
                                     <td>{{ request.total_price }}</td>
                                     <td>
-                                        <form action={% url "tenders:tender_status_update" tender.pk %} method="post">
-                                            {% csrf_token %}
-                                            <button value="Publish a tender" name="publish_a_tender"
-                                                    class="site-btn"> Select
-                                            </button>
-                                        </form>
+                                        {% if tender.status == 1 %}
+                                            <form action={% url "tenders:tender_status_update" tender.pk %} method="post">
+                                                {% csrf_token %}
+                                                <input hidden name="tender_request_pk" value={{ request.pk }}>
+                                                <button value="Select winner" name="select_winner"
+                                                        class="site-btn"> Select
+                                                </button>
+                                            </form>
+                                        {% else %}
+                                            {% if request.winner %}
+                                                WINNER
+                                            {% endif %}
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% empty %}

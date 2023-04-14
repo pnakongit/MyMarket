@@ -22,7 +22,7 @@ class SellerProfileUpdateForm(ModelForm):
         model = SellerProfile
         fields = "__all__"
 
-        exclude = ("customer", "rang")
+        exclude = ("customer", "rank")
 
 
 class BuyerProfileUpdateForm(ModelForm):

@@ -13,4 +13,3 @@ class CreateProductParameterForm(ModelForm):
     class Meta:
         model = ProductParameter
         fields = ["products", "amount"]
-

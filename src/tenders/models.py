@@ -4,6 +4,8 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from djmoney.models.fields import MoneyField
 
+from shops.models import Product
+
 
 class Tender(models.Model):
     TENDER_EXPIRATION_DAYS = 10
@@ -22,6 +24,16 @@ class Tender(models.Model):
     description = models.TextField(max_length=500, default="")
     status = models.PositiveIntegerField(choices=StatusChoices.choices, default=StatusChoices.NEW)
     minimum_required_rank = models.PositiveIntegerField(default=0)
+
+    def get_seller_email_for_mailing(self) -> list:
+        product_names_lst = [product.products.product_name for product in self.product_parameter.all()]
+
+        products = Product.objects.filter(product_name__in=product_names_lst)
+        emails_list = []
+        for product in products:
+            emails_list.append(product.seller.customer.email)
+
+        return emails_list
 
     def __str__(self):
         return f"{self.buyer} tender {self.pk}"
@@ -44,6 +56,7 @@ class Request(models.Model):
     tender = models.ForeignKey(
         to="tenders.Tender", related_name="request", on_delete=models.CASCADE, blank=True, null=True
     )
+    winner = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.seller} request {self.pk}"

@@ -10,9 +10,11 @@ from django.views.generic import CreateView, TemplateView
 from django_filters.views import FilterView
 
 from core.permissions import BuyerTypeRequiredMixin, SellerTypeRequiredMixin
-from tenders.filters import TendersBuyerFilter, TendersFilter, TendersSellerFilter
+from tenders.filters import (TendersBuyerFilter, TendersFilter,
+                             TendersSellerFilter)
 from tenders.forms import CreateProductParameterForm, TenderCreateForm
-from tenders.models import Tender, Request
+from tenders.models import Request, Tender
+from tenders.utils.sending_emails import sending_emails_start_tender
 
 
 class TenderCreateView(LoginRequiredMixin, BuyerTypeRequiredMixin, CreateView):
@@ -76,10 +78,18 @@ class TenderStatusUpdatePostView(LoginRequiredMixin, BuyerTypeRequiredMixin, Vie
         if "publish_a_tender" in request.POST:
             tender.status = Tender.StatusChoices.PUBLISHED
             tender.save()
+            sending_emails_start_tender(request=request, tender=tender)
 
         elif "cancel" in request.POST:
             tender.status = Tender.StatusChoices.CANCELED
             tender.save()
+
+        elif "select_winner" in request.POST:
+            tender.status = Tender.StatusChoices.EXECUTED
+            tender.save()
+            tender_request = Request.objects.get(pk=request.POST.get("tender_request_pk"))
+            tender_request.winner = True
+            tender_request.save()
 
         _success_url = reverse_lazy("tenders:buyer_tender_details", kwargs={"pk": tender.pk})
         return HttpResponseRedirect(_success_url)
@@ -126,7 +136,9 @@ class TenderDetailsView(TemplateView):
 
 
 class SellerCreateTenderRequestPostView(LoginRequiredMixin, SellerTypeRequiredMixin, View):
-    http_method_names = ["post", ]
+    http_method_names = [
+        "post",
+    ]
 
     def post(self, request, *args, **kwargs):
         tender = get_object_or_404(Tender, pk=request.POST.get("tender"))
@@ -149,4 +161,5 @@ class SellerDeleteTenderRequestPostView(SellerCreateTenderRequestPostView):
         tender_request.delete()
 
         return HttpResponseRedirect(
-            reverse_lazy("tenders:tender_details", kwargs={"pk": request.POST.get("tender_pk")}))
+            reverse_lazy("tenders:tender_details", kwargs={"pk": request.POST.get("tender_pk")})
+        )
