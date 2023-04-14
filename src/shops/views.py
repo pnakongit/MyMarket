@@ -348,9 +348,4 @@ def generate_orders_view(request, count):
     return HttpResponse('Task is started')
 
 
-def my_test_view(request, *args, **kwargs):
-    user_list = Product.objects.all()
-    print(request.GET)
-    user_filter = ProductFilters(request.GET, queryset=user_list)
-    print(user_filter)
-    return render(request, template_name="shops/test_view.html", context={"filter": user_filter})
+

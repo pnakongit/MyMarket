@@ -14,7 +14,7 @@ from shops.views import (BuyerOrderActiveView, BuyerOrderDetailsView,
                          ShoppingCartDeleteProductRedirect,
                          ShoppingCartUpdateProductRedirectPost,
                          generate_orders_view, generate_products_view,
-                         my_test_view)
+                         )
 
 app_name = 'shops'
 
@@ -54,5 +54,4 @@ urlpatterns = [
     path("my-buyer/orders/active/", BuyerOrderActiveView.as_view(), name="buyer_orders_active"),
     path("my-buyer/orders/history/", BuyerOrderHistoryView.as_view(), name="buyer_orders_history"),
     path("search/", SearchView.as_view(), name="search"),
-    path("test/", my_test_view, name="my_test_view"),
 ]
