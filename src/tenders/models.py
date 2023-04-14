@@ -26,7 +26,7 @@ class Tender(models.Model):
     minimum_required_rank = models.PositiveIntegerField(default=0)
 
     def get_seller_email_for_mailing(self) -> list:
-        product_names_lst = [product.products.product_name for product in self.product_parameter.all()]
+        product_names_lst = [product.products for product in self.product_parameter.all()]
 
         products = Product.objects.filter(product_name__in=product_names_lst)
         emails_list = []
@@ -41,7 +41,9 @@ class Tender(models.Model):
 
 class ProductParameter(models.Model):
     amount = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    products = models.ForeignKey(to="shops.Product", related_name="product_parameter", on_delete=models.CASCADE)
+    products = models.CharField(max_length=150)
+    category = models.ForeignKey(to="shops.Category", related_name="product_parameter", on_delete=models.SET_NULL, null=True)
+    brand = models.ForeignKey(to="shops.Brand", related_name="product_parameter", on_delete=models.SET_NULL, null=True)
     tender = models.ForeignKey(
         to="tenders.Tender", related_name="product_parameter", on_delete=models.CASCADE, blank=True, null=True
     )

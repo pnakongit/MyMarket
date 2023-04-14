@@ -71,10 +71,10 @@
                             <tbody>
                             {% for product_parameter in tender.product_parameter.all %}
                                 <tr>
-                                    <th>{{ product_parameter.products.product_name }}</th>
+                                    <th>{{ product_parameter.products }}</th>
                                     <td>{{ product_parameter.amount }}</td>
-                                    <td>{{ product_parameter.products.brand.name }}</td>
-                                    <td>{{ product_parameter.products.category.name }}</td>
+                                    <td>{{ product_parameter.brand.name }}</td>
+                                    <td>{{ product_parameter.category.name }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -119,7 +119,7 @@
                             <tbody>
                             {% for request in tender.request.all %}
                                 <tr>
-                                    <th>{{ request.seller.brand_name }}</th>
+                                    <th><a href="{% url "shops:seller_details" request.seller.pk %}">{{ request.seller.brand_name }}</a></th>
                                     <td>{{ request.seller.rank }}</td>
                                     <td>{{ request.total_price }}</td>
                                     <td>
